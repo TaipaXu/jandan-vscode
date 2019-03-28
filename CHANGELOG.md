@@ -9,3 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [0.1.0] - 2019-03-28
 ### Added
 - First release
+
+## [0.1.1] - 2019-03-28
+### Added
+- Add a icon for this extension.

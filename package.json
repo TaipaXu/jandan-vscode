@@ -1,7 +1,7 @@
 {
     "name": "jandan-vscode",
     "displayName": "JanDan",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A VS Code extension for JanDan.",
     "author": {
         "name": "Taipa Xu"
@@ -25,6 +25,7 @@
         "娱乐"
     ],
     "license": "GPL-3.0",
+    "icon": "static/images/icon.png",
     "activationEvents": [
         "onCommand:jandan.newsPrevious",
         "onCommand:jandan.newsNext",
