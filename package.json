@@ -1,0 +1,351 @@
+{
+    "name": "jandan-vscode",
+    "displayName": "JanDan",
+    "version": "0.1.0",
+    "description": "A VS Code extension for JanDan.",
+    "author": {
+        "name": "Taipa Xu"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/TaipaXu/jandan-vscode"
+    },
+    "bugs": "https://github.com/TaipaXu/jandan-vscode/issues",
+    "publisher": "TaipaXu",
+    "engines": {
+        "vscode": "^1.32.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "keywords": [
+        "jandan",
+        "jiandan",
+        "煎蛋",
+        "娱乐"
+    ],
+    "license": "GPL-3.0",
+    "activationEvents": [
+        "onCommand:jandan.newsPrevious",
+        "onCommand:jandan.newsNext",
+        "onCommand:jandan.newsRefresh",
+        "onCommand:jandan.picPrevious",
+        "onCommand:jandan.picNext",
+        "onCommand:jandan.picRefresh",
+        "onCommand:jandan.ooxxPrevious",
+        "onCommand:jandan.ooxxNext",
+        "onCommand:jandan.ooxxRefresh",
+        "onCommand:jandan.talkPrevious",
+        "onCommand:jandan.talkNext",
+        "onCommand:jandan.talkRefresh",
+        "onCommand:jandan.oo",
+        "onCommand:jandan.xx"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "jandan.newsPrevious",
+                "title": "Previous",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.newsNext",
+                "title": "Next",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.newsRefresh",
+                "title": "Refresh",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.picPrevious",
+                "title": "Previous",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.picNext",
+                "title": "Next",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.picRefresh",
+                "title": "Refresh",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.ooxxPrevious",
+                "title": "Previous",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.ooxxNext",
+                "title": "Next",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.ooxxRefresh",
+                "title": "Refresh",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.talkPrevious",
+                "title": "Previous",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.talkNext",
+                "title": "Next",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.talkRefresh",
+                "title": "Refresh",
+                "icon": {
+                    "light": "static/images/icon.svg",
+                    "dark": "static/images/icon.svg"
+                }
+            },
+            {
+                "command": "jandan.oo",
+                "title": "oo"
+            },
+            {
+                "command": "jandan.xx",
+                "title": "xx"
+            }
+        ],
+        "menus": {
+            "view/title": [
+                {
+                    "command": "jandan.newsPrevious",
+                    "when": "view == news",
+                    "group": "navigation@0"
+                },
+                {
+                    "command": "jandan.newsNext",
+                    "when": "view == news",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "jandan.newsRefresh",
+                    "when": "view == news",
+                    "group": "navigation@2"
+                },
+                {
+                    "command": "jandan.picPrevious",
+                    "when": "view == pic",
+                    "group": "navigation@0"
+                },
+                {
+                    "command": "jandan.picNext",
+                    "when": "view == pic",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "jandan.picRefresh",
+                    "when": "view == pic",
+                    "group": "navigation@2"
+                },
+                {
+                    "command": "jandan.ooxxPrevious",
+                    "when": "view == ooxx",
+                    "group": "navigation@0"
+                },
+                {
+                    "command": "jandan.ooxxNext",
+                    "when": "view == ooxx",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "jandan.ooxxRefresh",
+                    "when": "view == ooxx",
+                    "group": "navigation@2"
+                },
+                {
+                    "command": "jandan.talkPrevious",
+                    "when": "view == talk",
+                    "group": "navigation@0"
+                },
+                {
+                    "command": "jandan.talkNext",
+                    "when": "view == talk",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "jandan.talkRefresh",
+                    "when": "view == talk",
+                    "group": "navigation@2"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "jandan.oo",
+                    "when": "view == pic"
+                },
+                {
+                    "command": "jandan.xx",
+                    "when": "view == pic"
+                },
+                {
+                    "command": "jandan.oo",
+                    "when": "view == ooxx"
+                },
+                {
+                    "command": "jandan.xx",
+                    "when": "view == ooxx"
+                },
+                {
+                    "command": "jandan.oo",
+                    "when": "view == talk"
+                },
+                {
+                    "command": "jandan.xx",
+                    "when": "view == talk"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "jandan.newsPrevious",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.newsNext",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.newsRefresh",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.picPrevious",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.picNext",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.picRefresh",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.ooxxPrevious",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.ooxxNext",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.ooxxRefresh",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.talkPrevious",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.talkNext",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.talkRefresh",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.oo",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.xx",
+                    "when": "never"
+                }
+            ]
+        },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "jandan",
+                    "title": "JanDan",
+                    "icon": "static/images/icon.svg"
+                }
+            ]
+        },
+        "views": {
+            "jandan": [
+                {
+                    "id": "news",
+                    "name": "新鲜事"
+                },
+                {
+                    "id": "pic",
+                    "name": "无聊图"
+                },
+                {
+                    "id": "ooxx",
+                    "name": "随手拍"
+                },
+                {
+                    "id": "talk",
+                    "name": "段子"
+                },
+                {
+                    "id": "support",
+                    "name": "支援煎蛋"
+                }
+            ]
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "typescript": "^3.3.1",
+        "vscode": "^1.1.28",
+        "tslint": "^5.12.1",
+        "@types/node": "^10.12.21",
+        "@types/mocha": "^2.2.42"
+    },
+    "dependencies": {
+        "axios": "^0.18.0",
+        "form-data": "^2.3.3"
+    }
+}
