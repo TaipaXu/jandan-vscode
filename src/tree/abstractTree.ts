@@ -24,9 +24,9 @@ export abstract class AbstractTreeDataProvider implements vscode.TreeDataProvide
     currentPage: number = 1;
     items: Array<Node> = [];
 
-    public constructor() {}
+    public constructor() { }
 
-    protected abstract async getItems(): Promise<Array<Node>>;
+    protected abstract getItems(): Promise<Array<Node>>;
 
     public getTreeItem(element: Node): vscode.TreeItem {
         return element;
@@ -35,7 +35,7 @@ export abstract class AbstractTreeDataProvider implements vscode.TreeDataProvide
     public prevPage(): void {
         if (this.currentPage > 1) {
             this.currentPage--;
-            this.onDidChangeTreeDataEvent.fire();
+            this.onDidChangeTreeDataEvent.fire(undefined);
         } else {
             vscode.window.showWarningMessage('This is the first page!');
         }
@@ -43,12 +43,12 @@ export abstract class AbstractTreeDataProvider implements vscode.TreeDataProvide
 
     public nextPage(): void {
         this.currentPage++;
-        this.onDidChangeTreeDataEvent.fire();
+        this.onDidChangeTreeDataEvent.fire(undefined);
     }
 
     public refresh(): void {
         this.currentPage = 1;
-        this.onDidChangeTreeDataEvent.fire();
+        this.onDidChangeTreeDataEvent.fire(undefined);
     }
 
     public getChildren(element?: Node): Promise<Node[]> {

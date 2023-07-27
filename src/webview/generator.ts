@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require('path');
-const fs = require('fs');
+import path from "path";
+import fs from 'fs';
 import * as vscode from 'vscode';
 
 export function generateHtml(context: vscode.ExtensionContext, type: string, data: any): string {
@@ -31,10 +31,11 @@ export function generateHtml(context: vscode.ExtensionContext, type: string, dat
         html = html.replace('${content}', data.comment_content);
     } else {
         let picsDom = '';
-        data.pics.forEach((element: any) => {
+        data.pics.forEach((url: string) => {
+            const cdnUrl: string = `https://cdn.cdnjson.com/${url.replace(/^https?:\/\//, '')}`;
             picsDom += `
                 <div class="pic__img">
-                    <img src="${element}" alt="">
+                    <img src="${cdnUrl}" alt="">
                 </div>
             `;
         });
