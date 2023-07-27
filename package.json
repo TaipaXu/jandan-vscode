@@ -45,74 +45,47 @@
             {
                 "command": "jandan.newsPrevious",
                 "title": "Previous",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
+                "icon": "$(arrow-up)"
             },
             {
                 "command": "jandan.newsNext",
                 "title": "Next",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
+                "icon": "$(arrow-down)"
             },
             {
                 "command": "jandan.newsRefresh",
                 "title": "Refresh",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
+                "icon": "$(refresh)"
             },
             {
                 "command": "jandan.picPrevious",
                 "title": "Previous",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
+                "icon": "$(arrow-up)"
             },
             {
                 "command": "jandan.picNext",
                 "title": "Next",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
+                "icon": "$(arrow-down)"
             },
             {
                 "command": "jandan.picRefresh",
                 "title": "Refresh",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
+                "icon": "$(refresh)"
             },
             {
                 "command": "jandan.ooxxPrevious",
                 "title": "Previous",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
+                "icon": "$(arrow-up)"
             },
             {
                 "command": "jandan.ooxxNext",
                 "title": "Next",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
+                "icon": "$(arrow-down)"
             },
             {
                 "command": "jandan.ooxxRefresh",
                 "title": "Refresh",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
+                "icon": "$(refresh)"
             },
             {
                 "command": "jandan.oo",
