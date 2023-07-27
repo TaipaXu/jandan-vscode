@@ -17,11 +17,10 @@
  */
 
 import * as vscode from 'vscode';
-import  { NewsTreeDataProvider } from './tree/newsTree';
-import  { PicTreeDataProvider } from './tree/picTree';
-import  { OoxxTreeDataProvider } from './tree/ooxxTree';
-import  { TalkTreeDataProvider } from './tree/talkTree';
-import  { SupportTreeDataProvider } from './tree/supportTree';
+import { NewsTreeDataProvider } from './tree/newsTree';
+import { PicTreeDataProvider } from './tree/picTree';
+import { OoxxTreeDataProvider } from './tree/ooxxTree';
+import { SupportTreeDataProvider } from './tree/supportTree';
 import { generateHtml } from './webview/generator';
 import * as baseApi from './api/base';
 
@@ -29,13 +28,11 @@ export function activate(context: vscode.ExtensionContext): void {
     const newsDataProvider: NewsTreeDataProvider = new NewsTreeDataProvider();
     const picDataProvider: PicTreeDataProvider = new PicTreeDataProvider();
     const ooxxDataProvider: OoxxTreeDataProvider = new OoxxTreeDataProvider();
-    const talkDataProvider: TalkTreeDataProvider = new TalkTreeDataProvider();
     const supportDataProvider: SupportTreeDataProvider = new SupportTreeDataProvider();
 
     vscode.window.registerTreeDataProvider('news', newsDataProvider);
     vscode.window.registerTreeDataProvider('pic', picDataProvider);
     vscode.window.registerTreeDataProvider('ooxx', ooxxDataProvider);
-    vscode.window.registerTreeDataProvider('talk', talkDataProvider);
     vscode.window.registerTreeDataProvider('support', supportDataProvider);
 
     let webviewOpened: Boolean = false;
@@ -67,15 +64,6 @@ export function activate(context: vscode.ExtensionContext): void {
             ooxxDataProvider.nextPage();
         }),
         vscode.commands.registerCommand('jandan.ooxxRefresh', () => {
-            ooxxDataProvider.refresh();
-        }),
-        vscode.commands.registerCommand('jandan.talkPrevious', () => {
-            talkDataProvider.prevPage();
-        }),
-        vscode.commands.registerCommand('jandan.talkNext', () => {
-            talkDataProvider.nextPage();
-        }),
-        vscode.commands.registerCommand('jandan.talkRefresh', () => {
             ooxxDataProvider.refresh();
         }),
         vscode.commands.registerCommand('jandan.oo', async (item: any) => {
@@ -135,4 +123,4 @@ export function activate(context: vscode.ExtensionContext): void {
 
 }
 
-export function deactivate() {}
+export function deactivate() { }

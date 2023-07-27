@@ -36,9 +36,6 @@
         "onCommand:jandan.ooxxPrevious",
         "onCommand:jandan.ooxxNext",
         "onCommand:jandan.ooxxRefresh",
-        "onCommand:jandan.talkPrevious",
-        "onCommand:jandan.talkNext",
-        "onCommand:jandan.talkRefresh",
         "onCommand:jandan.oo",
         "onCommand:jandan.xx"
     ],
@@ -118,30 +115,6 @@
                 }
             },
             {
-                "command": "jandan.talkPrevious",
-                "title": "Previous",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
-            },
-            {
-                "command": "jandan.talkNext",
-                "title": "Next",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
-            },
-            {
-                "command": "jandan.talkRefresh",
-                "title": "Refresh",
-                "icon": {
-                    "light": "static/images/icon.svg",
-                    "dark": "static/images/icon.svg"
-                }
-            },
-            {
                 "command": "jandan.oo",
                 "title": "oo"
             },
@@ -196,21 +169,6 @@
                     "command": "jandan.ooxxRefresh",
                     "when": "view == ooxx",
                     "group": "navigation@2"
-                },
-                {
-                    "command": "jandan.talkPrevious",
-                    "when": "view == talk",
-                    "group": "navigation@0"
-                },
-                {
-                    "command": "jandan.talkNext",
-                    "when": "view == talk",
-                    "group": "navigation@1"
-                },
-                {
-                    "command": "jandan.talkRefresh",
-                    "when": "view == talk",
-                    "group": "navigation@2"
                 }
             ],
             "view/item/context": [
@@ -229,14 +187,6 @@
                 {
                     "command": "jandan.xx",
                     "when": "view == ooxx"
-                },
-                {
-                    "command": "jandan.oo",
-                    "when": "view == talk"
-                },
-                {
-                    "command": "jandan.xx",
-                    "when": "view == talk"
                 }
             ],
             "commandPalette": [
@@ -277,18 +227,6 @@
                     "when": "never"
                 },
                 {
-                    "command": "jandan.talkPrevious",
-                    "when": "never"
-                },
-                {
-                    "command": "jandan.talkNext",
-                    "when": "never"
-                },
-                {
-                    "command": "jandan.talkRefresh",
-                    "when": "never"
-                },
-                {
                     "command": "jandan.oo",
                     "when": "never"
                 },
@@ -320,10 +258,6 @@
                 {
                     "id": "ooxx",
                     "name": "随手拍"
-                },
-                {
-                    "id": "talk",
-                    "name": "段子"
                 },
                 {
                     "id": "support",
