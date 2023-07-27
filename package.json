@@ -13,7 +13,7 @@
     "bugs": "https://github.com/TaipaXu/jandan-vscode/issues",
     "publisher": "TaipaXu",
     "engines": {
-        "vscode": "^1.32.0"
+        "vscode": "^1.80.0"
     },
     "categories": [
         "Other"
@@ -333,20 +333,19 @@
         }
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install"
+        "build-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+        "dev": "npm run build-base -- --sourcemap --watch",
+        "build": "npm run build-base -- --minify",
+        "package": "vsce package --no-dependencies"
     },
     "devDependencies": {
-        "typescript": "^3.3.1",
-        "vscode": "^1.1.28",
-        "tslint": "^5.12.1",
-        "@types/node": "^10.12.21",
-        "@types/mocha": "^2.2.42"
+        "@types/node": "^20.4.5",
+        "@types/vscode": "^1.80.0",
+        "esbuild": "^0.18.17",
+        "vsce": "^2.15.0"
     },
     "dependencies": {
-        "axios": "^0.18.0",
-        "form-data": "^2.3.3"
+        "axios": "^1.4.0",
+        "form-data": "^4.0.0"
     }
 }
