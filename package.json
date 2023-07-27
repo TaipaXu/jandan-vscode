@@ -44,47 +44,47 @@
         "commands": [
             {
                 "command": "jandan.newsPrevious",
-                "title": "Previous",
+                "title": "上一页",
                 "icon": "$(arrow-up)"
             },
             {
                 "command": "jandan.newsNext",
-                "title": "Next",
+                "title": "下一页",
                 "icon": "$(arrow-down)"
             },
             {
                 "command": "jandan.newsRefresh",
-                "title": "Refresh",
+                "title": "刷新",
                 "icon": "$(refresh)"
             },
             {
                 "command": "jandan.picPrevious",
-                "title": "Previous",
+                "title": "上一页",
                 "icon": "$(arrow-up)"
             },
             {
                 "command": "jandan.picNext",
-                "title": "Next",
+                "title": "下一页",
                 "icon": "$(arrow-down)"
             },
             {
                 "command": "jandan.picRefresh",
-                "title": "Refresh",
+                "title": "刷新",
                 "icon": "$(refresh)"
             },
             {
                 "command": "jandan.ooxxPrevious",
-                "title": "Previous",
+                "title": "上一页",
                 "icon": "$(arrow-up)"
             },
             {
                 "command": "jandan.ooxxNext",
-                "title": "Next",
+                "title": "下一页",
                 "icon": "$(arrow-down)"
             },
             {
                 "command": "jandan.ooxxRefresh",
-                "title": "Refresh",
+                "title": "刷新",
                 "icon": "$(refresh)"
             },
             {
