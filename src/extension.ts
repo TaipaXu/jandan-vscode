@@ -70,15 +70,15 @@ export function activate(context: vscode.ExtensionContext): void {
             try {
                 let response = await baseApi.support(item.command.arguments[1].comment_ID);
                 if (response.status === 200) {
-                    let result: string = response.data.split('  |')[1];
-                    if (result === '0') {
-                        vscode.window.showWarningMessage('YOU\'VE VOTED');
-                    } else if (result === '1') {
-                        vscode.window.showInformationMessage('THANK YOU');
+                    let result: 0 | 1 = response.data.error;
+                    if (result === 0) {
+                        vscode.window.showInformationMessage('投票成功！');
+                    } else if (result === 1) {
+                        vscode.window.showWarningMessage('您已投票！');
                     }
                 }
             } catch (error) {
-                vscode.window.showWarningMessage('error');
+                vscode.window.showWarningMessage('网络错误！');
             }
 
         }),
@@ -86,15 +86,15 @@ export function activate(context: vscode.ExtensionContext): void {
             try {
                 let response = await baseApi.oppose(item.command.arguments[1].comment_ID);
                 if (response.status === 200) {
-                    let result: string = response.data.split('  |')[1];
-                    if (result === '0') {
-                        vscode.window.showInformationMessage('YOU\'VE VOTED');
-                    } else if (result === '-1') {
-                        vscode.window.showInformationMessage('THANK YOU');
+                    let result: 0 | 1 = response.data.error;
+                    if (result === 0) {
+                        vscode.window.showInformationMessage('投票成功！');
+                    } else if (result === 1) {
+                        vscode.window.showWarningMessage('您已投票！');
                     }
                 }
             } catch (error) {
-                vscode.window.showWarningMessage('error');
+                vscode.window.showWarningMessage('网络错误！');
             }
         }),
         vscode.commands.registerCommand('jandan.select', (type: string, item: any) => {

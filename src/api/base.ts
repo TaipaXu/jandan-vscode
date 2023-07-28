@@ -17,38 +17,34 @@
  */
 
 import { AxiosPromise } from 'axios';
-const FormData = require('form-data');
+import FormData from 'form-data';
 import request from '../request';
 
 
 export function support(id: string): AxiosPromise<any> {
     const form = new FormData();
-    form.append('ID', id);
+    form.append('comment_id', id);
+    form.append('like_type', 'pos');
+    form.append('data_type', 'comment');
 
     return request({
-        url: '/jandan-vote.php',
+        url: '/api/comment/vote',
         method: 'POST',
         headers: form.getHeaders(),
-        params: {
-            acv_ajax: true,
-            option: 1
-        },
         data: form
     });
 }
 
 export function oppose(id: string): AxiosPromise<any> {
     const form = new FormData();
-    form.append('ID', id);
+    form.append('comment_id', id);
+    form.append('like_type', 'neg');
+    form.append('data_type', 'comment');
 
     return request({
-        url: '',
+        url: '/api/comment/vote',
         method: 'POST',
         headers: form.getHeaders(),
-        params: {
-            acv_ajax: true,
-            option: 0
-        },
         data: form
     });
 }
