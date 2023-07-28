@@ -19,7 +19,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Page Title</title>
+    <title>JanDan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         img {
@@ -38,10 +38,11 @@
     </main>
 </body>
 <script>
-    window.onload = () => {
-        console.log('start');
-
-    };
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'init') {
+            window.scroll(0, 0);
+        }
+    });
 </script>
 
 </html>

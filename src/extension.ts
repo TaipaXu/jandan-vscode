@@ -117,6 +117,9 @@ export function activate(context: vscode.ExtensionContext): void {
                 }
                 let html: string = generateHtml(context, type, item);
                 webviewPanel.webview.html = html;
+                webviewPanel.webview.postMessage({
+                    "type": "init",
+                });
             }
         }),
     );
