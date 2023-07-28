@@ -14,6 +14,6 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Added
 - Add a icon for this extension.
 
-## [0.2.0] - 2019-03-28
+## [0.2.0] - 2023-07-28
 ### Fixed
 - Fix bug with 'boring image' not displaying pictures
