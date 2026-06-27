@@ -16,21 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios, {
-    AxiosRequestConfig,
-    AxiosResponse,
-    AxiosError,
-    AxiosInstance,
-    AxiosAdapter,
-    Cancel,
-    CancelToken,
-    CancelTokenSource,
-    Canceler
-} from 'axios';
+import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
 
 const config: AxiosRequestConfig = {
     baseURL: 'https://i.jandan.net',
-    timeout: 10000
+    timeout: 10000,
 };
 
 const service: AxiosInstance = axios.create(config);

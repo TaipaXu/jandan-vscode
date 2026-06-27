@@ -25,7 +25,7 @@ export function getPics(query: number): AxiosPromise<any> {
         method: 'GET',
         params: {
             oxwlxojflwblxbsapi: 'jandan.get_pic_comments',
-            page: query
-        }
+            page: query,
+        },
     });
 }

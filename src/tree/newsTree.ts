@@ -22,18 +22,16 @@ import * as newsApi from '../api/news';
 
 export class NewsTreeDataProvider extends AbstractTreeDataProvider {
     protected async getItems(): Promise<Array<Node>> {
-        let response: any = await newsApi.getNews(this.currentPage);
-        let items: Array<Node> = [];
+        const response: any = await newsApi.getNews(this.currentPage);
+        const items: Array<Node> = [];
         response.data.posts.forEach((element: any) => {
-            items.push(new Node(
-                element.title,
-                vscode.TreeItemCollapsibleState.None,
-                {
+            items.push(
+                new Node(element.title, vscode.TreeItemCollapsibleState.None, {
                     command: 'jandan.select',
                     title: '',
-                    arguments: ['news', element]
-                }
-            ));
+                    arguments: ['news', element],
+                }),
+            );
         });
         return items;
     }

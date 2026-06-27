@@ -35,11 +35,11 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.window.registerTreeDataProvider('ooxx', ooxxDataProvider);
     vscode.window.registerTreeDataProvider('support', supportDataProvider);
 
-    let webviewOpened: Boolean = false;
+    let webviewOpened = false;
     let webviewPanel: vscode.WebviewPanel;
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('jandan.newsPrevious', (item: any) => {
+        vscode.commands.registerCommand('jandan.newsPrevious', () => {
             newsDataProvider.prevPage();
         }),
         vscode.commands.registerCommand('jandan.newsNext', () => {
@@ -68,32 +68,31 @@ export function activate(context: vscode.ExtensionContext): void {
         }),
         vscode.commands.registerCommand('jandan.oo', async (item: any) => {
             try {
-                let response = await baseApi.support(item.command.arguments[1].comment_ID);
+                const response = await baseApi.support(item.command.arguments[1].comment_ID);
                 if (response.status === 200) {
-                    let result: 0 | 1 = response.data.error;
+                    const result: 0 | 1 = response.data.error;
                     if (result === 0) {
                         vscode.window.showInformationMessage('投票成功！');
                     } else if (result === 1) {
                         vscode.window.showWarningMessage('您已投票！');
                     }
                 }
-            } catch (error) {
+            } catch {
                 vscode.window.showWarningMessage('网络错误！');
             }
-
         }),
         vscode.commands.registerCommand('jandan.xx', async (item: any) => {
             try {
-                let response = await baseApi.oppose(item.command.arguments[1].comment_ID);
+                const response = await baseApi.oppose(item.command.arguments[1].comment_ID);
                 if (response.status === 200) {
-                    let result: 0 | 1 = response.data.error;
+                    const result: 0 | 1 = response.data.error;
                     if (result === 0) {
                         vscode.window.showInformationMessage('投票成功！');
                     } else if (result === 1) {
                         vscode.window.showWarningMessage('您已投票！');
                     }
                 }
-            } catch (error) {
+            } catch {
                 vscode.window.showWarningMessage('网络错误！');
             }
         }),
@@ -107,23 +106,22 @@ export function activate(context: vscode.ExtensionContext): void {
                         'JanDan',
                         vscode.ViewColumn.One,
                         {
-                            enableScripts: true
-                        }
+                            enableScripts: true,
+                        },
                     );
                     webviewOpened = true;
                     webviewPanel.onDidDispose(() => {
                         webviewOpened = false;
                     });
                 }
-                let html: string = generateHtml(context, type, item);
+                const html: string = generateHtml(context, type, item);
                 webviewPanel.webview.html = html;
                 webviewPanel.webview.postMessage({
-                    "type": "init",
+                    type: 'init',
                 });
             }
         }),
     );
-
 }
 
-export function deactivate() { }
+export function deactivate(): void {}

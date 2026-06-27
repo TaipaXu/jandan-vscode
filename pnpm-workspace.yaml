@@ -1,0 +1,11 @@
+packages:
+    - .
+
+overrides:
+    vite: npm:@voidzero-dev/vite-plus-core@latest
+    vitest: 4.1.9
+
+allowBuilds:
+    '@vscode/vsce-sign': false
+    esbuild: true
+    keytar: false

@@ -14,35 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. -->
 
-<!DOCTYPE html>
+<!doctype html>
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>JanDan</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>
+            img {
+                display: block;
+            }
 
-<head>
-    <meta charset="utf-8">
-    <title>JanDan</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        img {
-            display: block;
-        }
+            .pic__img {
+                margin-bottom: 12px;
+            }
+        </style>
+    </head>
 
-        .pic__img {
-            margin-bottom: 12px;
-        }
-    </style>
-</head>
-
-<body>
-    <main>
-        ${content}
-    </main>
-</body>
-<script>
-    window.addEventListener('message', (event) => {
-        if (event.data.type === 'init') {
-            window.scroll(0, 0);
-        }
-    });
-</script>
-
+    <body>
+        <main>${content}</main>
+    </body>
+    <script>
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'init') {
+                window.scroll(0, 0);
+            }
+        });
+    </script>
 </html>

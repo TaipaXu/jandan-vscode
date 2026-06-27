@@ -3,6 +3,17 @@
     "displayName": "JanDan",
     "version": "0.2.1",
     "description": "A VS Code extension for JanDan.",
+    "categories": [
+        "Other"
+    ],
+    "keywords": [
+        "jandan",
+        "jiandan",
+        "娱乐",
+        "煎蛋"
+    ],
+    "bugs": "https://github.com/TaipaXu/jandan-vscode/issues",
+    "license": "GPL-3.0",
     "author": {
         "name": "Taipa Xu"
     },
@@ -10,36 +21,30 @@
         "type": "git",
         "url": "https://github.com/TaipaXu/jandan-vscode"
     },
-    "bugs": "https://github.com/TaipaXu/jandan-vscode/issues",
     "publisher": "TaipaXu",
-    "engines": {
-        "vscode": "^1.80.0"
-    },
-    "categories": [
-        "Other"
-    ],
-    "keywords": [
-        "jandan",
-        "jiandan",
-        "煎蛋",
-        "娱乐"
-    ],
-    "license": "GPL-3.0",
-    "icon": "static/images/icon.png",
-    "activationEvents": [
-        "onCommand:jandan.newsPrevious",
-        "onCommand:jandan.newsNext",
-        "onCommand:jandan.newsRefresh",
-        "onCommand:jandan.picPrevious",
-        "onCommand:jandan.picNext",
-        "onCommand:jandan.picRefresh",
-        "onCommand:jandan.ooxxPrevious",
-        "onCommand:jandan.ooxxNext",
-        "onCommand:jandan.ooxxRefresh",
-        "onCommand:jandan.oo",
-        "onCommand:jandan.xx"
-    ],
     "main": "./out/extension.js",
+    "scripts": {
+        "dev": "vp build --watch --mode development",
+        "build": "vp build",
+        "type-check": "tsc --noEmit",
+        "lint": "vp lint . --fix",
+        "format": "vp fmt .",
+        "check": "vp check .",
+        "package": "vp run build && vp exec vsce package --no-dependencies",
+        "prepare": "vp config"
+    },
+    "dependencies": {
+        "axios": "^1.18.1",
+        "form-data": "^4.0.6"
+    },
+    "devDependencies": {
+        "@types/node": "^24.13.2",
+        "@types/vscode": "^1.125.0",
+        "@voidzero-dev/vite-plus-core": "^0.2.1",
+        "@vscode/vsce": "^3.9.2",
+        "typescript": "^6.0.3",
+        "vite-plus": "^0.2.1"
+    },
     "contributes": {
         "commands": [
             {
@@ -239,20 +244,23 @@
             ]
         }
     },
-    "scripts": {
-        "build-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-        "dev": "npm run build-base -- --sourcemap --watch",
-        "build": "npm run build-base -- --minify",
-        "package": "vsce package --no-dependencies"
+    "activationEvents": [
+        "onCommand:jandan.newsNext",
+        "onCommand:jandan.newsPrevious",
+        "onCommand:jandan.newsRefresh",
+        "onCommand:jandan.oo",
+        "onCommand:jandan.ooxxNext",
+        "onCommand:jandan.ooxxPrevious",
+        "onCommand:jandan.ooxxRefresh",
+        "onCommand:jandan.picNext",
+        "onCommand:jandan.picPrevious",
+        "onCommand:jandan.picRefresh",
+        "onCommand:jandan.xx"
+    ],
+    "icon": "static/images/icon.png",
+    "engines": {
+        "node": "24.17.0",
+        "vscode": "^1.125.0"
     },
-    "devDependencies": {
-        "@types/node": "^20.4.5",
-        "@types/vscode": "^1.80.0",
-        "esbuild": "^0.18.17",
-        "vsce": "^2.15.0"
-    },
-    "dependencies": {
-        "axios": "^1.4.0",
-        "form-data": "^4.0.0"
-    }
+    "packageManager": "pnpm@11.5.2"
 }

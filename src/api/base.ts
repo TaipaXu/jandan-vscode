@@ -20,7 +20,6 @@ import { AxiosPromise } from 'axios';
 import FormData from 'form-data';
 import request from '../request';
 
-
 export function support(id: string): AxiosPromise<any> {
     const form = new FormData();
     form.append('comment_id', id);
@@ -31,7 +30,7 @@ export function support(id: string): AxiosPromise<any> {
         url: '/api/comment/vote',
         method: 'POST',
         headers: form.getHeaders(),
-        data: form
+        data: form,
     });
 }
 
@@ -45,6 +44,6 @@ export function oppose(id: string): AxiosPromise<any> {
         url: '/api/comment/vote',
         method: 'POST',
         headers: form.getHeaders(),
-        data: form
+        data: form,
     });
 }

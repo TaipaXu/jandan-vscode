@@ -22,18 +22,16 @@ import * as picApi from '../api/pic';
 
 export class PicTreeDataProvider extends AbstractTreeDataProvider {
     public async getItems(): Promise<Node[]> {
-        let response: any = await picApi.getPics(this.currentPage);
-        let items: Array<Node> = [];
+        const response: any = await picApi.getPics(this.currentPage);
+        const items: Array<Node> = [];
         response.data.comments.forEach((element: any) => {
-            items.push(new Node(
-                element.comment_author,
-                vscode.TreeItemCollapsibleState.None,
-                {
+            items.push(
+                new Node(element.comment_author, vscode.TreeItemCollapsibleState.None, {
                     command: 'jandan.select',
                     title: '',
-                    arguments: ['pic', element]
-                }
-            ));
+                    arguments: ['pic', element],
+                }),
+            );
         });
         return items;
     }

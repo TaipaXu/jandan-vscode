@@ -6,21 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-## [0.1.0] - 2019-03-28
+### Changed
 
-### Added
-- First release
-
-## [0.1.1] - 2019-03-28
-
-### Added
-- Add a icon for this extension.
-
-## [0.2.0] - 2023-07-27
-
-### Fixed
-
-- Fix bug with 'boring image' not displaying pictures
+- Migrate project scaffold to Vite+ and upgrade dependencies.
 
 ## [0.2.1] - 2023-07-28
 
@@ -28,3 +16,21 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Fix bug with 'boring image' not being able to vote
 - Fix bug with page scrolling not being restored when switching content
+
+## [0.2.0] - 2023-07-27
+
+### Fixed
+
+- Fix bug with 'boring image' not displaying pictures
+
+## [0.1.1] - 2019-03-28
+
+### Added
+
+- Add a icon for this extension.
+
+## [0.1.0] - 2019-03-28
+
+### Added
+
+- First release

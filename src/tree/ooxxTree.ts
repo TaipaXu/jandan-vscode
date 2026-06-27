@@ -22,18 +22,16 @@ import * as ooxxApi from '../api/ooxx';
 
 export class OoxxTreeDataProvider extends AbstractTreeDataProvider {
     public async getItems(): Promise<Node[]> {
-        let response: any = await ooxxApi.getOoxxs(this.currentPage);
-        let items: Array<Node> = [];
+        const response: any = await ooxxApi.getOoxxs(this.currentPage);
+        const items: Array<Node> = [];
         response.data.comments.forEach((element: any) => {
-            items.push(new Node(
-                element.comment_author,
-                vscode.TreeItemCollapsibleState.None,
-                {
+            items.push(
+                new Node(element.comment_author, vscode.TreeItemCollapsibleState.None, {
                     command: 'jandan.select',
                     title: '',
-                    arguments: ['ooxx', element]
-                }
-            ));
+                    arguments: ['ooxx', element],
+                }),
+            );
         });
         return items;
     }

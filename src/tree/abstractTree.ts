@@ -19,14 +19,15 @@
 import * as vscode from 'vscode';
 
 export abstract class AbstractTreeDataProvider implements vscode.TreeDataProvider<Node> {
-    private onDidChangeTreeDataEvent: vscode.EventEmitter<any> = new vscode.EventEmitter<any>();
-    public readonly onDidChangeTreeData: vscode.Event<any> = this.onDidChangeTreeDataEvent.event;
+    private readonly onDidChangeTreeDataEvent = new vscode.EventEmitter<Node | undefined>();
+    public readonly onDidChangeTreeData: vscode.Event<Node | undefined> =
+        this.onDidChangeTreeDataEvent.event;
     currentPage: number = 1;
-    items: Array<Node> = [];
+    items: Node[] = [];
 
-    public constructor() { }
+    public constructor() {}
 
-    protected abstract getItems(): Promise<Array<Node>>;
+    protected abstract getItems(): Promise<Node[]>;
 
     public getTreeItem(element: Node): vscode.TreeItem {
         return element;
@@ -51,12 +52,10 @@ export abstract class AbstractTreeDataProvider implements vscode.TreeDataProvide
         this.onDidChangeTreeDataEvent.fire(undefined);
     }
 
-    public getChildren(element?: Node): Promise<Node[]> {
-        return new Promise(async (resolve) => {
-            this.items = await this.getItems();
-            vscode.window.setStatusBarMessage(`page: ${this.currentPage}`);
-            return resolve(this.items);
-        });
+    public async getChildren(_element?: Node): Promise<Node[]> {
+        this.items = await this.getItems();
+        vscode.window.setStatusBarMessage(`page: ${this.currentPage}`);
+        return this.items;
     }
 }
 
@@ -64,7 +63,7 @@ export class Node extends vscode.TreeItem {
     public constructor(
         public readonly label: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-        public readonly command?: vscode.Command
+        public readonly command?: vscode.Command,
     ) {
         super(label, collapsibleState);
     }

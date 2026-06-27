@@ -25,7 +25,7 @@ export function getOoxxs(query: number): AxiosPromise<any> {
         method: 'GET',
         params: {
             oxwlxojflwblxbsapi: 'jandan.get_ooxx_comments',
-            page: query
-        }
+            page: query,
+        },
     });
 }

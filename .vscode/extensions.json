@@ -1,5 +1,8 @@
 {
     "recommendations": [
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "EditorConfig.EditorConfig",
+        "oxc.oxc-vscode",
+        "VoidZero.vite-plus-extension-pack"
     ]
 }

@@ -28,7 +28,7 @@ export function getNews(page: number): AxiosPromise<any> {
         params: {
             oxwlxojflwblxbsapi: 'get_recent_posts',
             include: 'url,date,tags,author,title,content,comment_count,custom_fields',
-            page: page
-        }
+            page: page,
+        },
     });
 }
