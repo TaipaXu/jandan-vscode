@@ -62,10 +62,14 @@ export const topCategories: TopCategory[] = [
     },
 ];
 
-export const getTopItems = async (category: TopCategory): Promise<RequestResponse<any>> => {
+export const getTopItems = async (
+    category: TopCategory,
+    signal?: AbortSignal,
+): Promise<RequestResponse<any>> => {
     const response = await request({
         url: category.path,
         method: 'GET',
+        signal,
         headers: {
             Referer: 'https://jandan.net/top',
         },

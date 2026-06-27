@@ -21,12 +21,12 @@ import { AbstractTreeDataProvider, Node } from './abstractTree';
 import * as newsApi from '../api/news';
 
 export class NewsTreeDataProvider extends AbstractTreeDataProvider {
-    protected async getItems(): Promise<Array<Node>> {
-        const response: any = await newsApi.getNews(this.currentPage);
+    protected async getItems(signal: AbortSignal): Promise<Array<Node>> {
+        const response: any = await newsApi.getNews(this.currentPage, signal);
         const items: Array<Node> = [];
         const posts = response.data.posts;
         if (!Array.isArray(posts)) {
-            return items;
+            throw new Error('数据格式异常');
         }
 
         posts.forEach((element: any) => {

@@ -64,16 +64,20 @@ export class PicTreeDataProvider extends AbstractTreeDataProvider {
 
     public refresh(): void {
         this.currentPage = 0;
-        this.totalPages = 0;
+        this.clearCache();
         this.fireChange();
     }
 
-    public async getItems(): Promise<Node[]> {
-        const response: any = await picApi.getPics(this.currentPage);
+    protected async getItems(signal: AbortSignal): Promise<Node[]> {
+        const response: any = await picApi.getPics(this.currentPage, signal);
+        if (signal.aborted) {
+            return this.items;
+        }
+
         const data = response.data.data;
         const items: Array<Node> = [];
         if (!data || !Array.isArray(data.list)) {
-            return items;
+            throw new Error('数据格式异常');
         }
 
         this.totalPages = data.total_pages;

@@ -127,12 +127,14 @@ export const parseNewsContent = (html: string): string => {
 
 export const getNews = async (
     page: number = 1,
+    signal?: AbortSignal,
 ): Promise<RequestResponse<{ posts: NewsPost[] }>> => {
     const url = page <= 1 ? '/' : `/page/${page}`;
 
     const response = await request<string>({
         url,
         method: 'GET',
+        signal,
         responseType: 'text',
     });
 
@@ -144,10 +146,14 @@ export const getNews = async (
     };
 };
 
-export const getNewsContent = async (url: string): Promise<RequestResponse<string>> => {
+export const getNewsContent = async (
+    url: string,
+    signal?: AbortSignal,
+): Promise<RequestResponse<string>> => {
     const response = await request<string>({
         url,
         method: 'GET',
+        signal,
         responseType: 'text',
     });
 

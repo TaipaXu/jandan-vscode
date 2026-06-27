@@ -18,10 +18,14 @@
 
 import request, { type RequestResponse } from '../request';
 
-export const getTreeholes = async (page: number = 0): Promise<RequestResponse<any>> => {
+export const getTreeholes = async (
+    page: number = 0,
+    signal?: AbortSignal,
+): Promise<RequestResponse<any>> => {
     const response = await request({
         url: '/api/comment/post/102312',
         method: 'GET',
+        signal,
         headers: {
             Referer: 'https://jandan.net/treehole',
         },

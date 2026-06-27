@@ -38,7 +38,10 @@ export abstract class CommentPostTreeDataProvider extends AbstractTreeDataProvid
     private totalPages: number = 0;
 
     protected abstract readonly viewType: string;
-    protected abstract getCommentPosts(page: number): Promise<RequestResponse<any>>;
+    protected abstract getCommentPosts(
+        page: number,
+        signal: AbortSignal,
+    ): Promise<RequestResponse<any>>;
 
     public constructor() {
         super();
@@ -67,16 +70,20 @@ export abstract class CommentPostTreeDataProvider extends AbstractTreeDataProvid
 
     public refresh(): void {
         this.currentPage = 0;
-        this.totalPages = 0;
+        this.clearCache();
         this.fireChange();
     }
 
-    public async getItems(): Promise<Node[]> {
-        const response: any = await this.getCommentPosts(this.currentPage);
+    protected async getItems(signal: AbortSignal): Promise<Node[]> {
+        const response: any = await this.getCommentPosts(this.currentPage, signal);
+        if (signal.aborted) {
+            return this.items;
+        }
+
         const data = response.data.data;
         const items: Array<Node> = [];
         if (!data || !Array.isArray(data.list)) {
-            return items;
+            throw new Error('数据格式异常');
         }
 
         this.totalPages = data.total_pages;

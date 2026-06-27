@@ -23,8 +23,11 @@ import * as treeholeApi from '../api/treehole';
 export class TreeholeTreeDataProvider extends CommentPostTreeDataProvider {
     protected readonly viewType = 'treehole';
 
-    protected async getCommentPosts(page: number): Promise<RequestResponse<any>> {
-        const response = await treeholeApi.getTreeholes(page);
+    protected async getCommentPosts(
+        page: number,
+        signal: AbortSignal,
+    ): Promise<RequestResponse<any>> {
+        const response = await treeholeApi.getTreeholes(page, signal);
         return response;
     }
 }

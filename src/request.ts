@@ -26,6 +26,7 @@ export interface RequestConfig {
     data?: unknown;
     headers?: Record<string, string>;
     responseType?: ResponseType;
+    signal?: AbortSignal;
 }
 
 export interface RequestResponse<T = any> {
@@ -130,7 +131,16 @@ const request = async <T = any>(config: RequestConfig): Promise<RequestResponse<
     const method = config.method ?? 'GET';
     const headers = buildHeaders(config.headers);
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeout);
+    const abortRequest = (): void => {
+        controller.abort(config.signal?.reason);
+    };
+    const timer = setTimeout(() => controller.abort(new Error('请求超时')), timeout);
+
+    if (config.signal?.aborted) {
+        abortRequest();
+    } else {
+        config.signal?.addEventListener('abort', abortRequest, { once: true });
+    }
 
     try {
         const response = await fetch(buildUrl(config.url, config.params), {
@@ -159,6 +169,7 @@ const request = async <T = any>(config: RequestConfig): Promise<RequestResponse<
         return requestResponse;
     } finally {
         clearTimeout(timer);
+        config.signal?.removeEventListener('abort', abortRequest);
     }
 };
 

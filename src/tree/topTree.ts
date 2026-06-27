@@ -82,45 +82,64 @@ class TopItemNode extends Node {
 }
 
 export class TopTreeDataProvider extends AbstractTreeDataProvider {
-    private readonly cache = new Map<string, Node[]>();
-
     public refresh(): void {
-        this.cache.clear();
+        this.clearCache();
         this.fireChange();
     }
 
-    public async getChildren(element?: Node): Promise<Node[]> {
+    protected getCacheKey(element?: Node): string | undefined {
+        if (!element) {
+            return 'top:categories';
+        }
+
+        if (element instanceof TopCategoryNode) {
+            return `top:${element.category.id}`;
+        }
+
+        return undefined;
+    }
+
+    protected getLoadingMessage(element?: Node): string {
+        if (element instanceof TopCategoryNode) {
+            return `Loading ${element.category.name}`;
+        }
+
+        return 'Loading top';
+    }
+
+    protected getLoadedMessage(element?: Node): string {
+        if (element instanceof TopCategoryNode) {
+            return element.category.name;
+        }
+
+        return 'top';
+    }
+
+    protected async getItems(signal: AbortSignal, element?: Node): Promise<Node[]> {
         if (!element) {
             return topApi.topCategories.map((category) => new TopCategoryNode(category));
         }
 
         if (element instanceof TopCategoryNode) {
-            return this.getCategoryItems(element.category);
+            return this.getCategoryItems(element.category, signal);
         }
 
         return [];
     }
 
-    protected async getItems(): Promise<Node[]> {
-        return topApi.topCategories.map((category) => new TopCategoryNode(category));
-    }
-
-    private async getCategoryItems(category: topApi.TopCategory): Promise<Node[]> {
-        const cachedItems = this.cache.get(category.id);
-        if (cachedItems) {
-            return cachedItems;
+    private async getCategoryItems(
+        category: topApi.TopCategory,
+        signal: AbortSignal,
+    ): Promise<Node[]> {
+        const response: any = await topApi.getTopItems(category, signal);
+        const data = response.data.data;
+        if (!Array.isArray(data)) {
+            throw new Error('数据格式异常');
         }
 
-        const response: any = await topApi.getTopItems(category);
-        const data = response.data.data;
-        const items = Array.isArray(data)
-            ? data.map(
-                  (element: any, index: number) =>
-                      new TopItemNode(category.id, index + 1, normalizeTopItem(element)),
-              )
-            : [];
-
-        this.cache.set(category.id, items);
-        return items;
+        return data.map(
+            (element: any, index: number) =>
+                new TopItemNode(category.id, index + 1, normalizeTopItem(element)),
+        );
     }
 }

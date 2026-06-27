@@ -23,8 +23,11 @@ import * as qaApi from '../api/qa';
 export class QaTreeDataProvider extends CommentPostTreeDataProvider {
     protected readonly viewType = 'qa';
 
-    protected async getCommentPosts(page: number): Promise<RequestResponse<any>> {
-        const response = await qaApi.getQas(page);
+    protected async getCommentPosts(
+        page: number,
+        signal: AbortSignal,
+    ): Promise<RequestResponse<any>> {
+        const response = await qaApi.getQas(page, signal);
         return response;
     }
 }

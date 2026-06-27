@@ -18,10 +18,14 @@
 
 import request, { type RequestResponse } from '../request';
 
-export const getNvzhuangs = async (page: number = 0): Promise<RequestResponse<any>> => {
+export const getNvzhuangs = async (
+    page: number = 0,
+    signal?: AbortSignal,
+): Promise<RequestResponse<any>> => {
     const response = await request({
         url: '/api/comment/post/108629',
         method: 'GET',
+        signal,
         headers: {
             Referer: 'https://jandan.net/pic',
         },

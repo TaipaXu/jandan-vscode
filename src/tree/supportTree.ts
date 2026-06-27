@@ -20,7 +20,7 @@ import * as vscode from 'vscode';
 import { AbstractTreeDataProvider, Node } from './abstractTree';
 
 export class SupportTreeDataProvider extends AbstractTreeDataProvider {
-    public async getItems(): Promise<Node[]> {
+    protected async getItems(_signal: AbortSignal): Promise<Node[]> {
         const items: Array<Node> = [
             new Node('官方站点', vscode.TreeItemCollapsibleState.None, {
                 command: 'jandan.select',
