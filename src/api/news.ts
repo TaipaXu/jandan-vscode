@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AxiosPromise } from 'axios';
-import request from '../request';
+import request, { type RequestResponse } from '../request';
 
 export interface NewsPost {
     id: number;
@@ -30,7 +29,7 @@ export interface NewsPost {
     thumbnail?: string;
 }
 
-function decodeHtml(value: string): string {
+const decodeHtml = (value: string): string => {
     return value
         .replace(/&nbsp;/g, ' ')
         .replace(/&amp;/g, '&')
@@ -38,18 +37,18 @@ function decodeHtml(value: string): string {
         .replace(/&gt;/g, '>')
         .replace(/&quot;/g, '"')
         .replace(/&#39;/g, "'");
-}
+};
 
-function stripHtml(value: string): string {
+const stripHtml = (value: string): string => {
     return decodeHtml(
         value
             .replace(/<[^>]+>/g, '')
             .replace(/\s+/g, ' ')
             .trim(),
     );
-}
+};
 
-function toAbsoluteUrl(url: string): string {
+const toAbsoluteUrl = (url: string): string => {
     if (/^https?:\/\//i.test(url)) {
         return url;
     }
@@ -59,22 +58,22 @@ function toAbsoluteUrl(url: string): string {
     }
 
     return `https://jandan.net${url.startsWith('/') ? url : `/${url}`}`;
-}
+};
 
-function getPostId(url: string): number {
+const getPostId = (url: string): number => {
     const match = url.match(/\/p\/(\d+)\/?/);
     return match ? Number(match[1]) : 0;
-}
+};
 
-function getNewsFallbackContent(title: string, excerpt: string, url: string): string {
+const getNewsFallbackContent = (title: string, excerpt: string, url: string): string => {
     return `
         <h1>${title}</h1>
         <p>${excerpt}</p>
         <p><a href="${url}">${url}</a></p>
     `;
-}
+};
 
-export function parseNewsList(html: string): NewsPost[] {
+export const parseNewsList = (html: string): NewsPost[] => {
     const posts: NewsPost[] = [];
     const itemMarker = '<div class="post-item row">';
     let start = html.indexOf(itemMarker);
@@ -119,37 +118,41 @@ export function parseNewsList(html: string): NewsPost[] {
     }
 
     return posts;
-}
+};
 
-export function parseNewsContent(html: string): string {
+export const parseNewsContent = (html: string): string => {
     const contentMatch = html.match(/<div class="post-content">\s*([\s\S]*?)\s*<\/div>\s*<script>/);
     return contentMatch ? contentMatch[1].replace(/src="\/\//g, 'src="https://') : '';
-}
+};
 
-export function getNews(page: number = 1): AxiosPromise<any> {
+export const getNews = async (
+    page: number = 1,
+): Promise<RequestResponse<{ posts: NewsPost[] }>> => {
     const url = page <= 1 ? '/' : `/page/${page}`;
 
-    return request({
+    const response = await request<string>({
         url,
         method: 'GET',
         responseType: 'text',
-        transformResponse: (data) => data,
-    }).then((response) => {
-        response.data = {
-            posts: parseNewsList(response.data),
-        };
-        return response;
     });
-}
 
-export function getNewsContent(url: string): AxiosPromise<any> {
-    return request({
+    return {
+        ...response,
+        data: {
+            posts: parseNewsList(response.data),
+        },
+    };
+};
+
+export const getNewsContent = async (url: string): Promise<RequestResponse<string>> => {
+    const response = await request<string>({
         url,
         method: 'GET',
         responseType: 'text',
-        transformResponse: (data) => data,
-    }).then((response) => {
-        response.data = parseNewsContent(response.data);
-        return response;
     });
-}
+
+    return {
+        ...response,
+        data: parseNewsContent(response.data),
+    };
+};

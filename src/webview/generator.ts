@@ -20,7 +20,7 @@ import path from 'path';
 import fs from 'fs';
 import * as vscode from 'vscode';
 
-export function generateHtml(context: vscode.ExtensionContext, type: string, data: any): string {
+export const generateHtml = (context: vscode.ExtensionContext, type: string, data: any): string => {
     const resourcePath = path.join(context.extensionPath, 'static/web/index.html');
     let html = fs.readFileSync(resourcePath, 'utf-8');
 
@@ -52,4 +52,4 @@ export function generateHtml(context: vscode.ExtensionContext, type: string, dat
         html = html.replace('${content}', picsDom);
     }
     return html;
-}
+};

@@ -16,14 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { type AxiosPromise } from 'axios';
+import { type RequestResponse } from '../request';
 import { CommentPostTreeDataProvider } from './commentPostTree';
 import * as qaApi from '../api/qa';
 
 export class QaTreeDataProvider extends CommentPostTreeDataProvider {
     protected readonly viewType = 'qa';
 
-    protected getCommentPosts(page: number): AxiosPromise<any> {
-        return qaApi.getQas(page);
+    protected async getCommentPosts(page: number): Promise<RequestResponse<any>> {
+        const response = await qaApi.getQas(page);
+        return response;
     }
 }

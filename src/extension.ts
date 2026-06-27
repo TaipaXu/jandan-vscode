@@ -31,7 +31,7 @@ import * as newsApi from './api/news';
 
 type LikeType = 'pos' | 'neg';
 
-async function vote(item: any, likeType: LikeType): Promise<void> {
+const vote = async (item: any, likeType: LikeType): Promise<void> => {
     const comment = item?.command?.arguments?.[1] ?? item;
     const commentId = comment?.comment_ID ?? comment?.id;
 
@@ -60,9 +60,9 @@ async function vote(item: any, likeType: LikeType): Promise<void> {
     } catch {
         vscode.window.showWarningMessage('网络错误！');
     }
-}
+};
 
-export function activate(context: vscode.ExtensionContext): void {
+export const activate = (context: vscode.ExtensionContext): void => {
     const topDataProvider: TopTreeDataProvider = new TopTreeDataProvider();
     const newsDataProvider: NewsTreeDataProvider = new NewsTreeDataProvider();
     const picDataProvider: PicTreeDataProvider = new PicTreeDataProvider();
@@ -184,6 +184,6 @@ export function activate(context: vscode.ExtensionContext): void {
             }
         }),
     );
-}
+};
 
-export function deactivate(): void {}
+export const deactivate = (): void => {};

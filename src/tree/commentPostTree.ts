@@ -17,12 +17,12 @@
  */
 
 import * as vscode from 'vscode';
-import { type AxiosPromise } from 'axios';
+import { type RequestResponse } from '../request';
 import { AbstractTreeDataProvider, Node } from './abstractTree';
 
 const imageSrcRegexp = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
 
-function getImageUrls(content: string): string[] {
+const getImageUrls = (content: string): string[] => {
     const urls: string[] = [];
     let match: RegExpExecArray | null;
 
@@ -32,13 +32,13 @@ function getImageUrls(content: string): string[] {
     }
 
     return urls;
-}
+};
 
 export abstract class CommentPostTreeDataProvider extends AbstractTreeDataProvider {
     private totalPages: number = 0;
 
     protected abstract readonly viewType: string;
-    protected abstract getCommentPosts(page: number): AxiosPromise<any>;
+    protected abstract getCommentPosts(page: number): Promise<RequestResponse<any>>;
 
     public constructor() {
         super();

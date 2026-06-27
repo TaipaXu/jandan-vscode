@@ -22,7 +22,7 @@ import * as nvzhuangApi from '../api/nvzhuang';
 
 const imageSrcRegexp = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
 
-function getImageUrls(content: string): string[] {
+const getImageUrls = (content: string): string[] => {
     const urls: string[] = [];
     let match: RegExpExecArray | null;
 
@@ -32,7 +32,7 @@ function getImageUrls(content: string): string[] {
     }
 
     return urls;
-}
+};
 
 export class NvzhuangTreeDataProvider extends AbstractTreeDataProvider {
     private totalPages: number = 0;

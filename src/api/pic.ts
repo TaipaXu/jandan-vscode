@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AxiosPromise } from 'axios';
-import request from '../request';
+import request, { type RequestResponse } from '../request';
 
-export function getPics(page: number = 0): AxiosPromise<any> {
-    return request({
+export const getPics = async (page: number = 0): Promise<RequestResponse<any>> => {
+    const response = await request({
         url: '/api/comment/post/26402',
         method: 'GET',
         headers: {
@@ -31,4 +30,5 @@ export function getPics(page: number = 0): AxiosPromise<any> {
             page: page,
         },
     });
-}
+    return response;
+};

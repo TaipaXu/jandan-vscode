@@ -16,13 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AxiosPromise } from 'axios';
-import request from '../request';
+import request, { type RequestResponse } from '../request';
 
 type LikeType = 'pos' | 'neg';
 
-function vote(id: number | string, likeType: LikeType): AxiosPromise<any> {
-    return request({
+const vote = async (id: number | string, likeType: LikeType): Promise<RequestResponse<any>> => {
+    const response = await request({
         url: '/api/comment/vote',
         method: 'POST',
         headers: {
@@ -34,12 +33,15 @@ function vote(id: number | string, likeType: LikeType): AxiosPromise<any> {
             data_type: 'comment',
         },
     });
-}
+    return response;
+};
 
-export function support(id: number | string): AxiosPromise<any> {
-    return vote(id, 'pos');
-}
+export const support = async (id: number | string): Promise<RequestResponse<any>> => {
+    const response = await vote(id, 'pos');
+    return response;
+};
 
-export function oppose(id: number | string): AxiosPromise<any> {
-    return vote(id, 'neg');
-}
+export const oppose = async (id: number | string): Promise<RequestResponse<any>> => {
+    const response = await vote(id, 'neg');
+    return response;
+};

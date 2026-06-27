@@ -24,7 +24,7 @@ JanDan is an unofficial VS Code extension for [jandan.net](https://jandan.net/).
 - [Vite+](https://viteplus.dev/guide/) as the unified toolchain and `vp` CLI.
 - [VS Code Extension API](https://code.visualstudio.com/api) for tree views, commands, and webviews.
 - [TypeScript](https://www.typescriptlang.org/) for extension code.
-- [Axios](https://axios-http.com/) and `form-data` for JanDan API requests.
+- Native `fetch` for JanDan API requests.
 
 ## Runtime
 

@@ -16,18 +16,150 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
+type RequestMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+type ResponseType = 'json' | 'text' | 'arrayBuffer';
 
-const config: AxiosRequestConfig = {
-    baseURL: 'https://jandan.net',
-    timeout: 10000,
-    headers: {
-        Accept: 'application/json, text/html, */*',
-        Referer: 'https://jandan.net/',
-        'User-Agent': 'Mozilla/5.0',
-    },
+export interface RequestConfig {
+    url: string;
+    method?: RequestMethod;
+    params?: Record<string, string | number | boolean | null | undefined>;
+    data?: unknown;
+    headers?: Record<string, string>;
+    responseType?: ResponseType;
+}
+
+export interface RequestResponse<T = any> {
+    data: T;
+    status: number;
+    statusText: string;
+    headers: Record<string, string>;
+    config: RequestConfig;
+}
+
+export class RequestError<T = any> extends Error {
+    public constructor(
+        message: string,
+        public readonly response: RequestResponse<T>,
+    ) {
+        super(message);
+        this.name = 'RequestError';
+    }
+}
+
+const baseURL = 'https://jandan.net';
+const timeout = 10000;
+const defaultHeaders: Record<string, string> = {
+    Accept: 'application/json, text/html, */*',
+    Referer: 'https://jandan.net/',
+    'User-Agent': 'Mozilla/5.0',
 };
 
-const service: AxiosInstance = axios.create(config);
+const buildUrl = (url: string, params?: RequestConfig['params']): string => {
+    const requestUrl = new URL(url, baseURL);
 
-export default service;
+    if (params) {
+        Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                requestUrl.searchParams.set(key, String(value));
+            }
+        });
+    }
+
+    return requestUrl.toString();
+};
+
+const buildHeaders = (headers?: RequestConfig['headers']): Headers => {
+    return new Headers({
+        ...defaultHeaders,
+        ...headers,
+    });
+};
+
+const buildBody = (data: unknown, headers: Headers): BodyInit | undefined => {
+    if (data === undefined || data === null) {
+        return undefined;
+    }
+
+    if (
+        typeof data === 'string' ||
+        data instanceof URLSearchParams ||
+        data instanceof ArrayBuffer ||
+        data instanceof Blob ||
+        data instanceof FormData
+    ) {
+        return data;
+    }
+
+    if (!headers.has('Content-Type')) {
+        headers.set('Content-Type', 'application/json');
+    }
+
+    return JSON.stringify(data);
+};
+
+const parseData = async (response: Response, responseType?: ResponseType): Promise<any> => {
+    if (responseType === 'arrayBuffer') {
+        return response.arrayBuffer();
+    }
+
+    if (responseType === 'text') {
+        return response.text();
+    }
+
+    const text = await response.text();
+    if (!text) {
+        return null;
+    }
+
+    try {
+        return JSON.parse(text);
+    } catch {
+        return text;
+    }
+};
+
+const headersToObject = (headers: Headers): Record<string, string> => {
+    const result: Record<string, string> = {};
+    headers.forEach((value, key) => {
+        result[key] = value;
+    });
+    return result;
+};
+
+const request = async <T = any>(config: RequestConfig): Promise<RequestResponse<T>> => {
+    const method = config.method ?? 'GET';
+    const headers = buildHeaders(config.headers);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        const response = await fetch(buildUrl(config.url, config.params), {
+            method,
+            headers,
+            body: buildBody(config.data, headers),
+            signal: controller.signal,
+        });
+        const data = await parseData(response, config.responseType);
+
+        const requestResponse: RequestResponse<T> = {
+            data,
+            status: response.status,
+            statusText: response.statusText,
+            headers: headersToObject(response.headers),
+            config,
+        };
+
+        if (!response.ok) {
+            throw new RequestError(
+                `Request failed with status code ${response.status}`,
+                requestResponse,
+            );
+        }
+
+        return requestResponse;
+    } finally {
+        clearTimeout(timer);
+    }
+};
+
+export default request;

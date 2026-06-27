@@ -16,14 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { type AxiosPromise } from 'axios';
+import { type RequestResponse } from '../request';
 import { CommentPostTreeDataProvider } from './commentPostTree';
 import * as treeholeApi from '../api/treehole';
 
 export class TreeholeTreeDataProvider extends CommentPostTreeDataProvider {
     protected readonly viewType = 'treehole';
 
-    protected getCommentPosts(page: number): AxiosPromise<any> {
-        return treeholeApi.getTreeholes(page);
+    protected async getCommentPosts(page: number): Promise<RequestResponse<any>> {
+        const response = await treeholeApi.getTreeholes(page);
+        return response;
     }
 }

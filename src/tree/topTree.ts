@@ -22,7 +22,7 @@ import * as topApi from '../api/top';
 
 const imageSrcRegexp = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
 
-function getImageUrls(content: string): string[] {
+const getImageUrls = (content: string): string[] => {
     const urls: string[] = [];
     let match: RegExpExecArray | null;
 
@@ -32,9 +32,9 @@ function getImageUrls(content: string): string[] {
     }
 
     return urls;
-}
+};
 
-function normalizeTopItem(element: any): any {
+const normalizeTopItem = (element: any): any => {
     const content = element.content || '';
 
     return {
@@ -44,7 +44,7 @@ function normalizeTopItem(element: any): any {
         comment_content: content,
         pics: Array.isArray(element.images) ? element.images : getImageUrls(content),
     };
-}
+};
 
 class TopCategoryNode extends Node {
     public constructor(public readonly category: topApi.TopCategory) {

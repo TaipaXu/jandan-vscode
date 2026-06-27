@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AxiosPromise } from 'axios';
-import request from '../request';
+import request, { type RequestResponse } from '../request';
 
 export interface TopCategory {
     id: string;
@@ -63,12 +62,13 @@ export const topCategories: TopCategory[] = [
     },
 ];
 
-export function getTopItems(category: TopCategory): AxiosPromise<any> {
-    return request({
+export const getTopItems = async (category: TopCategory): Promise<RequestResponse<any>> => {
+    const response = await request({
         url: category.path,
         method: 'GET',
         headers: {
             Referer: 'https://jandan.net/top',
         },
     });
-}
+    return response;
+};
