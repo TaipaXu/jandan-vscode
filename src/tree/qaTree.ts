@@ -18,12 +18,12 @@
 
 import { type AxiosPromise } from 'axios';
 import { CommentPostTreeDataProvider } from './commentPostTree';
-import * as treeholeApi from '../api/treehole';
+import * as qaApi from '../api/qa';
 
-export class TreeholeTreeDataProvider extends CommentPostTreeDataProvider {
-    protected readonly viewType = 'treehole';
+export class QaTreeDataProvider extends CommentPostTreeDataProvider {
+    protected readonly viewType = 'qa';
 
     protected getCommentPosts(page: number): AxiosPromise<any> {
-        return treeholeApi.getTreeholes(page);
+        return qaApi.getQas(page);
     }
 }

@@ -16,14 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { type AxiosPromise } from 'axios';
-import { CommentPostTreeDataProvider } from './commentPostTree';
-import * as treeholeApi from '../api/treehole';
+import { AxiosPromise } from 'axios';
+import request from '../request';
 
-export class TreeholeTreeDataProvider extends CommentPostTreeDataProvider {
-    protected readonly viewType = 'treehole';
-
-    protected getCommentPosts(page: number): AxiosPromise<any> {
-        return treeholeApi.getTreeholes(page);
-    }
+export function getQas(page: number = 0): AxiosPromise<any> {
+    return request({
+        url: '/api/comment/post/88399',
+        method: 'GET',
+        headers: {
+            Referer: 'https://jandan.net/qa',
+        },
+        params: {
+            order: 'desc',
+            page: page,
+        },
+    });
 }

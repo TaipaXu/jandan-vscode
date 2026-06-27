@@ -23,6 +23,7 @@ import { PicTreeDataProvider } from './tree/picTree';
 import { OoxxTreeDataProvider } from './tree/ooxxTree';
 import { NvzhuangTreeDataProvider } from './tree/nvzhuangTree';
 import { TreeholeTreeDataProvider } from './tree/treeholeTree';
+import { QaTreeDataProvider } from './tree/qaTree';
 import { SupportTreeDataProvider } from './tree/supportTree';
 import { generateHtml } from './webview/generator';
 import * as baseApi from './api/base';
@@ -35,6 +36,7 @@ export function activate(context: vscode.ExtensionContext): void {
     const ooxxDataProvider: OoxxTreeDataProvider = new OoxxTreeDataProvider();
     const nvzhuangDataProvider: NvzhuangTreeDataProvider = new NvzhuangTreeDataProvider();
     const treeholeDataProvider: TreeholeTreeDataProvider = new TreeholeTreeDataProvider();
+    const qaDataProvider: QaTreeDataProvider = new QaTreeDataProvider();
     const supportDataProvider: SupportTreeDataProvider = new SupportTreeDataProvider();
 
     vscode.window.registerTreeDataProvider('top', topDataProvider);
@@ -43,6 +45,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.window.registerTreeDataProvider('ooxx', ooxxDataProvider);
     vscode.window.registerTreeDataProvider('nvzhuang', nvzhuangDataProvider);
     vscode.window.registerTreeDataProvider('treehole', treeholeDataProvider);
+    vscode.window.registerTreeDataProvider('qa', qaDataProvider);
     vscode.window.registerTreeDataProvider('support', supportDataProvider);
 
     let webviewOpened = false;
@@ -96,6 +99,15 @@ export function activate(context: vscode.ExtensionContext): void {
         }),
         vscode.commands.registerCommand('jandan.treeholeRefresh', () => {
             treeholeDataProvider.refresh();
+        }),
+        vscode.commands.registerCommand('jandan.qaPrevious', () => {
+            qaDataProvider.prevPage();
+        }),
+        vscode.commands.registerCommand('jandan.qaNext', () => {
+            qaDataProvider.nextPage();
+        }),
+        vscode.commands.registerCommand('jandan.qaRefresh', () => {
+            qaDataProvider.refresh();
         }),
         vscode.commands.registerCommand('jandan.oo', async (item: any) => {
             try {

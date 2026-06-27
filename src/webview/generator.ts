@@ -32,6 +32,7 @@ export function generateHtml(context: vscode.ExtensionContext, type: string, dat
         type === 'ooxx' ||
         type === 'nvzhuang' ||
         type === 'treehole' ||
+        type === 'qa' ||
         type === 'top'
     ) {
         html = html.replace('${content}', data.comment_content || data.content || '');

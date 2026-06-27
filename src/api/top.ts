@@ -42,6 +42,11 @@ export const topCategories: TopCategory[] = [
         path: '/api/top/post/102312',
     },
     {
+        id: 'qa',
+        name: '问答',
+        path: '/api/top/post/88399',
+    },
+    {
         id: 'ooxx',
         name: '随手拍',
         path: '/api/top/post/21183',

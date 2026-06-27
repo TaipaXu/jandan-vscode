@@ -4,7 +4,7 @@ Language: English | [中文](./README.zh-CN.md)
 
 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=TaipaXu.jandan-vscode) | [Repository](https://github.com/TaipaXu/jandan-vscode)
 
-JanDan is an unofficial VS Code extension for [jandan.net](https://jandan.net/). It adds a JanDan activity bar view for browsing hot lists, fresh posts, image comments, casual photos, cross-dressing posts, Tree Hole, and support links without leaving VS Code.
+JanDan is an unofficial VS Code extension for [jandan.net](https://jandan.net/). It adds a JanDan activity bar view for browsing hot lists, fresh posts, image comments, casual photos, cross-dressing posts, Tree Hole, Q&A, and support links without leaving VS Code.
 
 ## Preview
 
@@ -12,8 +12,8 @@ JanDan is an unofficial VS Code extension for [jandan.net](https://jandan.net/).
 
 ## Features
 
-- Activity bar container with Hot Lists, Fresh News, Boring Pics, Casual Photos, Cross-Dressing, Tree Hole, and Support views.
-- Hot Lists includes 4-hour hot, Boring Pics, Tree Hole, Casual Photos, 3-day best, and 7-day best categories.
+- Activity bar container with Hot Lists, Fresh News, Boring Pics, Casual Photos, Cross-Dressing, Tree Hole, Q&A, and Support views.
+- Hot Lists includes 4-hour hot, Boring Pics, Tree Hole, Q&A, Casual Photos, 3-day best, and 7-day best categories.
 - Paged browsing with previous, next, and refresh actions for JanDan feeds.
 - Webview rendering for posts and image collections.
 - `oo` and `xx` vote actions for supported image entries.
