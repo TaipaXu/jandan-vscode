@@ -113,6 +113,21 @@
                 "icon": "$(refresh)"
             },
             {
+                "command": "jandan.treeholePrevious",
+                "title": "上一页",
+                "icon": "$(arrow-up)"
+            },
+            {
+                "command": "jandan.treeholeNext",
+                "title": "下一页",
+                "icon": "$(arrow-down)"
+            },
+            {
+                "command": "jandan.treeholeRefresh",
+                "title": "刷新",
+                "icon": "$(refresh)"
+            },
+            {
                 "command": "jandan.oo",
                 "title": "oo"
             },
@@ -187,6 +202,21 @@
                     "command": "jandan.nvzhuangRefresh",
                     "when": "view == nvzhuang",
                     "group": "navigation@2"
+                },
+                {
+                    "command": "jandan.treeholePrevious",
+                    "when": "view == treehole",
+                    "group": "navigation@0"
+                },
+                {
+                    "command": "jandan.treeholeNext",
+                    "when": "view == treehole",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "jandan.treeholeRefresh",
+                    "when": "view == treehole",
+                    "group": "navigation@2"
                 }
             ],
             "view/item/context": [
@@ -221,6 +251,14 @@
                 {
                     "command": "jandan.xx",
                     "when": "view == nvzhuang"
+                },
+                {
+                    "command": "jandan.oo",
+                    "when": "view == treehole"
+                },
+                {
+                    "command": "jandan.xx",
+                    "when": "view == treehole"
                 }
             ],
             "commandPalette": [
@@ -277,6 +315,18 @@
                     "when": "never"
                 },
                 {
+                    "command": "jandan.treeholePrevious",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.treeholeNext",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.treeholeRefresh",
+                    "when": "never"
+                },
+                {
                     "command": "jandan.oo",
                     "when": "never"
                 },
@@ -316,6 +366,10 @@
                 {
                     "id": "nvzhuang",
                     "name": "女装"
+                },
+                {
+                    "id": "treehole",
+                    "name": "树洞"
                 },
                 {
                     "id": "support",

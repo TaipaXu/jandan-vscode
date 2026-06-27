@@ -22,6 +22,7 @@ import { NewsTreeDataProvider } from './tree/newsTree';
 import { PicTreeDataProvider } from './tree/picTree';
 import { OoxxTreeDataProvider } from './tree/ooxxTree';
 import { NvzhuangTreeDataProvider } from './tree/nvzhuangTree';
+import { TreeholeTreeDataProvider } from './tree/treeholeTree';
 import { SupportTreeDataProvider } from './tree/supportTree';
 import { generateHtml } from './webview/generator';
 import * as baseApi from './api/base';
@@ -33,6 +34,7 @@ export function activate(context: vscode.ExtensionContext): void {
     const picDataProvider: PicTreeDataProvider = new PicTreeDataProvider();
     const ooxxDataProvider: OoxxTreeDataProvider = new OoxxTreeDataProvider();
     const nvzhuangDataProvider: NvzhuangTreeDataProvider = new NvzhuangTreeDataProvider();
+    const treeholeDataProvider: TreeholeTreeDataProvider = new TreeholeTreeDataProvider();
     const supportDataProvider: SupportTreeDataProvider = new SupportTreeDataProvider();
 
     vscode.window.registerTreeDataProvider('top', topDataProvider);
@@ -40,6 +42,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.window.registerTreeDataProvider('pic', picDataProvider);
     vscode.window.registerTreeDataProvider('ooxx', ooxxDataProvider);
     vscode.window.registerTreeDataProvider('nvzhuang', nvzhuangDataProvider);
+    vscode.window.registerTreeDataProvider('treehole', treeholeDataProvider);
     vscode.window.registerTreeDataProvider('support', supportDataProvider);
 
     let webviewOpened = false;
@@ -84,6 +87,15 @@ export function activate(context: vscode.ExtensionContext): void {
         }),
         vscode.commands.registerCommand('jandan.nvzhuangRefresh', () => {
             nvzhuangDataProvider.refresh();
+        }),
+        vscode.commands.registerCommand('jandan.treeholePrevious', () => {
+            treeholeDataProvider.prevPage();
+        }),
+        vscode.commands.registerCommand('jandan.treeholeNext', () => {
+            treeholeDataProvider.nextPage();
+        }),
+        vscode.commands.registerCommand('jandan.treeholeRefresh', () => {
+            treeholeDataProvider.refresh();
         }),
         vscode.commands.registerCommand('jandan.oo', async (item: any) => {
             try {
