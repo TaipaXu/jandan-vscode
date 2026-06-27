@@ -244,19 +244,6 @@
             ]
         }
     },
-    "activationEvents": [
-        "onCommand:jandan.newsNext",
-        "onCommand:jandan.newsPrevious",
-        "onCommand:jandan.newsRefresh",
-        "onCommand:jandan.oo",
-        "onCommand:jandan.ooxxNext",
-        "onCommand:jandan.ooxxPrevious",
-        "onCommand:jandan.ooxxRefresh",
-        "onCommand:jandan.picNext",
-        "onCommand:jandan.picPrevious",
-        "onCommand:jandan.picRefresh",
-        "onCommand:jandan.xx"
-    ],
     "icon": "static/images/icon.png",
     "engines": {
         "node": "24.17.0",
