@@ -48,6 +48,11 @@
     "contributes": {
         "commands": [
             {
+                "command": "jandan.topRefresh",
+                "title": "刷新",
+                "icon": "$(refresh)"
+            },
+            {
                 "command": "jandan.newsPrevious",
                 "title": "上一页",
                 "icon": "$(arrow-up)"
@@ -119,6 +124,11 @@
         "menus": {
             "view/title": [
                 {
+                    "command": "jandan.topRefresh",
+                    "when": "view == top",
+                    "group": "navigation@0"
+                },
+                {
                     "command": "jandan.newsPrevious",
                     "when": "view == news",
                     "group": "navigation@0"
@@ -182,6 +192,14 @@
             "view/item/context": [
                 {
                     "command": "jandan.oo",
+                    "when": "view == top && viewItem == voteable"
+                },
+                {
+                    "command": "jandan.xx",
+                    "when": "view == top && viewItem == voteable"
+                },
+                {
+                    "command": "jandan.oo",
                     "when": "view == pic"
                 },
                 {
@@ -206,6 +224,10 @@
                 }
             ],
             "commandPalette": [
+                {
+                    "command": "jandan.topRefresh",
+                    "when": "never"
+                },
                 {
                     "command": "jandan.newsPrevious",
                     "when": "never"
@@ -275,6 +297,10 @@
         },
         "views": {
             "jandan": [
+                {
+                    "id": "top",
+                    "name": "热榜"
+                },
                 {
                     "id": "news",
                     "name": "新鲜事"

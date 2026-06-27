@@ -17,6 +17,7 @@
  */
 
 import * as vscode from 'vscode';
+import { TopTreeDataProvider } from './tree/topTree';
 import { NewsTreeDataProvider } from './tree/newsTree';
 import { PicTreeDataProvider } from './tree/picTree';
 import { OoxxTreeDataProvider } from './tree/ooxxTree';
@@ -27,12 +28,14 @@ import * as baseApi from './api/base';
 import * as newsApi from './api/news';
 
 export function activate(context: vscode.ExtensionContext): void {
+    const topDataProvider: TopTreeDataProvider = new TopTreeDataProvider();
     const newsDataProvider: NewsTreeDataProvider = new NewsTreeDataProvider();
     const picDataProvider: PicTreeDataProvider = new PicTreeDataProvider();
     const ooxxDataProvider: OoxxTreeDataProvider = new OoxxTreeDataProvider();
     const nvzhuangDataProvider: NvzhuangTreeDataProvider = new NvzhuangTreeDataProvider();
     const supportDataProvider: SupportTreeDataProvider = new SupportTreeDataProvider();
 
+    vscode.window.registerTreeDataProvider('top', topDataProvider);
     vscode.window.registerTreeDataProvider('news', newsDataProvider);
     vscode.window.registerTreeDataProvider('pic', picDataProvider);
     vscode.window.registerTreeDataProvider('ooxx', ooxxDataProvider);
@@ -43,6 +46,9 @@ export function activate(context: vscode.ExtensionContext): void {
     let webviewPanel: vscode.WebviewPanel;
 
     context.subscriptions.push(
+        vscode.commands.registerCommand('jandan.topRefresh', () => {
+            topDataProvider.refresh();
+        }),
         vscode.commands.registerCommand('jandan.newsPrevious', () => {
             newsDataProvider.prevPage();
         }),
