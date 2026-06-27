@@ -22,7 +22,7 @@ import { AbstractTreeDataProvider, Node } from './abstractTree';
 export class SupportTreeDataProvider extends AbstractTreeDataProvider {
     public async getItems(): Promise<Node[]> {
         const items: Array<Node> = [
-            new Node('站点广告', vscode.TreeItemCollapsibleState.None, {
+            new Node('官方站点', vscode.TreeItemCollapsibleState.None, {
                 command: 'jandan.select',
                 title: '',
                 arguments: ['support', 'http://jandan.net'],
@@ -30,7 +30,7 @@ export class SupportTreeDataProvider extends AbstractTreeDataProvider {
             new Node('火星商店', vscode.TreeItemCollapsibleState.None, {
                 command: 'jandan.select',
                 title: '',
-                arguments: ['support', 'https://jandan.taobao.com'],
+                arguments: ['support', 'https://shop419436462.taobao.com/'],
             }),
         ];
         return items;
