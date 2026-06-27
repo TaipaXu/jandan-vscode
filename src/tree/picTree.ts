@@ -20,18 +20,82 @@ import * as vscode from 'vscode';
 import { AbstractTreeDataProvider, Node } from './abstractTree';
 import * as picApi from '../api/pic';
 
+const imageSrcRegexp = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
+
+function getImageUrls(content: string): string[] {
+    const urls: string[] = [];
+    let match: RegExpExecArray | null;
+
+    imageSrcRegexp.lastIndex = 0;
+    while ((match = imageSrcRegexp.exec(content)) !== null) {
+        urls.push(match[1]);
+    }
+
+    return urls;
+}
+
 export class PicTreeDataProvider extends AbstractTreeDataProvider {
+    private totalPages: number = 0;
+
+    public constructor() {
+        super();
+        this.currentPage = 0;
+    }
+
+    public prevPage(): void {
+        if (this.currentPage > 0 && this.currentPage < this.totalPages) {
+            this.currentPage++;
+            this.fireChange();
+        } else {
+            vscode.window.showWarningMessage('This is the first page!');
+        }
+    }
+
+    public nextPage(): void {
+        if (this.currentPage === 0) {
+            this.fireChange();
+        } else if (this.currentPage > 1) {
+            this.currentPage--;
+            this.fireChange();
+        } else {
+            vscode.window.showWarningMessage('This is the last page!');
+        }
+    }
+
+    public refresh(): void {
+        this.currentPage = 0;
+        this.totalPages = 0;
+        this.fireChange();
+    }
+
     public async getItems(): Promise<Node[]> {
         const response: any = await picApi.getPics(this.currentPage);
+        const data = response.data.data;
         const items: Array<Node> = [];
-        response.data.comments.forEach((element: any) => {
-            items.push(
-                new Node(element.comment_author, vscode.TreeItemCollapsibleState.None, {
-                    command: 'jandan.select',
-                    title: '',
-                    arguments: ['pic', element],
-                }),
-            );
+        if (!data || !Array.isArray(data.list)) {
+            return items;
+        }
+
+        this.totalPages = data.total_pages;
+        this.currentPage = data.current_page;
+
+        data.list.forEach((element: any) => {
+            const content = element.content || '';
+            const picItem = {
+                ...element,
+                comment_ID: String(element.id),
+                comment_author: element.author,
+                comment_content: content,
+                pics: getImageUrls(content),
+            };
+
+            const node = new Node(picItem.comment_author, vscode.TreeItemCollapsibleState.None, {
+                command: 'jandan.select',
+                title: '',
+                arguments: ['pic', picItem],
+            });
+            node.id = `pic-${picItem.comment_ID}`;
+            items.push(node);
         });
         return items;
     }

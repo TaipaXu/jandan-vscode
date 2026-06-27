@@ -19,13 +19,17 @@
 import { AxiosPromise } from 'axios';
 import request from '../request';
 
-export function getPics(query: number): AxiosPromise<any> {
+export function getPics(page: number = 0): AxiosPromise<any> {
     return request({
-        url: '',
+        url: 'https://jandan.net/api/comment/post/26402',
         method: 'GET',
+        headers: {
+            Referer: 'https://jandan.net/pic',
+            'User-Agent': 'Mozilla/5.0',
+        },
         params: {
-            oxwlxojflwblxbsapi: 'jandan.get_pic_comments',
-            page: query,
+            order: 'desc',
+            page: page,
         },
     });
 }

@@ -36,7 +36,7 @@ export abstract class AbstractTreeDataProvider implements vscode.TreeDataProvide
     public prevPage(): void {
         if (this.currentPage > 1) {
             this.currentPage--;
-            this.onDidChangeTreeDataEvent.fire(undefined);
+            this.fireChange();
         } else {
             vscode.window.showWarningMessage('This is the first page!');
         }
@@ -44,11 +44,15 @@ export abstract class AbstractTreeDataProvider implements vscode.TreeDataProvide
 
     public nextPage(): void {
         this.currentPage++;
-        this.onDidChangeTreeDataEvent.fire(undefined);
+        this.fireChange();
     }
 
     public refresh(): void {
         this.currentPage = 1;
+        this.fireChange();
+    }
+
+    protected fireChange(): void {
         this.onDidChangeTreeDataEvent.fire(undefined);
     }
 
