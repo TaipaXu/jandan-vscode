@@ -3,6 +3,7 @@
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "noEmit": true,
+        "noImplicitAny": true,
         "skipLibCheck": true,
         "strict": false,
         "target": "ES2024",

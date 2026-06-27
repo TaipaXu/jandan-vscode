@@ -19,37 +19,51 @@
 import path from 'path';
 import fs from 'fs';
 import * as vscode from 'vscode';
+import { type NewsPost } from '../api/news';
+import {
+    type CommentTreeItem,
+    type CommentWebviewType,
+    type JandanWebviewType,
+} from '../api/types';
 
-export const generateHtml = (context: vscode.ExtensionContext, type: string, data: any): string => {
+type WebviewData = NewsPost | CommentTreeItem;
+
+const isNewsPost = (data: WebviewData): data is NewsPost => {
+    return 'contentLoaded' in data;
+};
+
+const getCommentContent = (data: WebviewData): string => {
+    if (!('comment_content' in data)) {
+        return '';
+    }
+
+    return data.comment_content || data.content || '';
+};
+
+export function generateHtml(
+    context: vscode.ExtensionContext,
+    type: 'news',
+    data: NewsPost,
+): string;
+export function generateHtml(
+    context: vscode.ExtensionContext,
+    type: CommentWebviewType,
+    data: CommentTreeItem,
+): string;
+export function generateHtml(
+    context: vscode.ExtensionContext,
+    type: JandanWebviewType,
+    data: WebviewData,
+): string {
     const resourcePath = path.join(context.extensionPath, 'static/web/index.html');
     let html = fs.readFileSync(resourcePath, 'utf-8');
 
-    if (type === 'news') {
+    if (type === 'news' && isNewsPost(data)) {
         html = html.replace('${content}', data.content);
         html = html.replace(/src="\/\//g, 'src="https://');
-    } else if (
-        type === 'pic' ||
-        type === 'ooxx' ||
-        type === 'nvzhuang' ||
-        type === 'treehole' ||
-        type === 'qa' ||
-        type === 'top'
-    ) {
-        html = html.replace('${content}', data.comment_content || data.content || '');
-    } else if (type === 'talk') {
-        html = html.replace('${content}', data.comment_content);
     } else {
-        let picsDom = '';
-        data.pics.forEach((url: string) => {
-            const cdnUrl: string = `https://cdn.cdnjson.com/${url.replace(/^https?:\/\//, '')}`;
-            picsDom += `
-                <div class="pic__img">
-                    <img src="${cdnUrl}" alt="">
-                </div>
-            `;
-        });
-
-        html = html.replace('${content}', picsDom);
+        html = html.replace('${content}', getCommentContent(data));
     }
+
     return html;
-};
+}

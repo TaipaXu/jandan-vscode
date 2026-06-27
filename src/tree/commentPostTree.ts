@@ -18,30 +18,18 @@
 
 import * as vscode from 'vscode';
 import { type RequestResponse } from '../request';
+import { type CommentPostListResponse, type CommentPostViewType } from '../api/types';
 import { AbstractTreeDataProvider, Node } from './abstractTree';
-
-const imageSrcRegexp = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
-
-const getImageUrls = (content: string): string[] => {
-    const urls: string[] = [];
-    let match: RegExpExecArray | null;
-
-    imageSrcRegexp.lastIndex = 0;
-    while ((match = imageSrcRegexp.exec(content)) !== null) {
-        urls.push(match[1]);
-    }
-
-    return urls;
-};
+import { normalizeCommentItem } from './commentUtils';
 
 export abstract class CommentPostTreeDataProvider extends AbstractTreeDataProvider {
     private totalPages: number = 0;
 
-    protected abstract readonly viewType: string;
+    protected abstract readonly viewType: CommentPostViewType;
     protected abstract getCommentPosts(
         page: number,
         signal: AbortSignal,
-    ): Promise<RequestResponse<any>>;
+    ): Promise<RequestResponse<CommentPostListResponse>>;
 
     public constructor() {
         super();
@@ -75,7 +63,7 @@ export abstract class CommentPostTreeDataProvider extends AbstractTreeDataProvid
     }
 
     protected async getItems(signal: AbortSignal): Promise<Node[]> {
-        const response: any = await this.getCommentPosts(this.currentPage, signal);
+        const response = await this.getCommentPosts(this.currentPage, signal);
         if (signal.aborted) {
             return this.items;
         }
@@ -89,15 +77,8 @@ export abstract class CommentPostTreeDataProvider extends AbstractTreeDataProvid
         this.totalPages = data.total_pages;
         this.currentPage = data.current_page;
 
-        data.list.forEach((element: any) => {
-            const content = element.content || '';
-            const item = {
-                ...element,
-                comment_ID: String(element.id),
-                comment_author: element.author,
-                comment_content: content,
-                pics: Array.isArray(element.images) ? element.images : getImageUrls(content),
-            };
+        data.list.forEach((element) => {
+            const item = normalizeCommentItem(element);
 
             const node = new Node(item.comment_author, vscode.TreeItemCollapsibleState.None, {
                 command: 'jandan.select',

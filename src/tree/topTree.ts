@@ -17,34 +17,10 @@
  */
 
 import * as vscode from 'vscode';
+import { type CommentTreeItem } from '../api/types';
 import { AbstractTreeDataProvider, Node } from './abstractTree';
 import * as topApi from '../api/top';
-
-const imageSrcRegexp = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
-
-const getImageUrls = (content: string): string[] => {
-    const urls: string[] = [];
-    let match: RegExpExecArray | null;
-
-    imageSrcRegexp.lastIndex = 0;
-    while ((match = imageSrcRegexp.exec(content)) !== null) {
-        urls.push(match[1]);
-    }
-
-    return urls;
-};
-
-const normalizeTopItem = (element: any): any => {
-    const content = element.content || '';
-
-    return {
-        ...element,
-        comment_ID: String(element.id),
-        comment_author: element.author,
-        comment_content: content,
-        pics: Array.isArray(element.images) ? element.images : getImageUrls(content),
-    };
-};
+import { normalizeCommentItem } from './commentUtils';
 
 class TopCategoryNode extends Node {
     public constructor(public readonly category: topApi.TopCategory) {
@@ -55,7 +31,7 @@ class TopCategoryNode extends Node {
 }
 
 class TopItemNode extends Node {
-    public constructor(categoryId: string, rank: number, item: any) {
+    public constructor(categoryId: string, rank: number, item: CommentTreeItem) {
         const positive = item.vote_positive ?? 0;
         const negative = item.vote_negative ?? 0;
 
@@ -131,15 +107,15 @@ export class TopTreeDataProvider extends AbstractTreeDataProvider {
         category: topApi.TopCategory,
         signal: AbortSignal,
     ): Promise<Node[]> {
-        const response: any = await topApi.getTopItems(category, signal);
+        const response = await topApi.getTopItems(category, signal);
         const data = response.data.data;
         if (!Array.isArray(data)) {
             throw new Error('数据格式异常');
         }
 
         return data.map(
-            (element: any, index: number) =>
-                new TopItemNode(category.id, index + 1, normalizeTopItem(element)),
+            (element, index) =>
+                new TopItemNode(category.id, index + 1, normalizeCommentItem(element)),
         );
     }
 }

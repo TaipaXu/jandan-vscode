@@ -17,11 +17,13 @@
  */
 
 import request, { type RequestResponse } from '../request';
+import { type LikeType, type VoteResponse } from './types';
 
-type LikeType = 'pos' | 'neg';
-
-const vote = async (id: number | string, likeType: LikeType): Promise<RequestResponse<any>> => {
-    const response = await request({
+const vote = async (
+    id: number | string,
+    likeType: LikeType,
+): Promise<RequestResponse<VoteResponse>> => {
+    const response = await request<VoteResponse>({
         url: '/api/comment/vote',
         method: 'POST',
         headers: {
@@ -36,12 +38,12 @@ const vote = async (id: number | string, likeType: LikeType): Promise<RequestRes
     return response;
 };
 
-export const support = async (id: number | string): Promise<RequestResponse<any>> => {
+export const support = async (id: number | string): Promise<RequestResponse<VoteResponse>> => {
     const response = await vote(id, 'pos');
     return response;
 };
 
-export const oppose = async (id: number | string): Promise<RequestResponse<any>> => {
+export const oppose = async (id: number | string): Promise<RequestResponse<VoteResponse>> => {
     const response = await vote(id, 'neg');
     return response;
 };

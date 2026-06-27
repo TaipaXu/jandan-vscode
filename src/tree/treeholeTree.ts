@@ -17,6 +17,7 @@
  */
 
 import { type RequestResponse } from '../request';
+import { type CommentPostListResponse } from '../api/types';
 import { CommentPostTreeDataProvider } from './commentPostTree';
 import * as treeholeApi from '../api/treehole';
 
@@ -26,7 +27,7 @@ export class TreeholeTreeDataProvider extends CommentPostTreeDataProvider {
     protected async getCommentPosts(
         page: number,
         signal: AbortSignal,
-    ): Promise<RequestResponse<any>> {
+    ): Promise<RequestResponse<CommentPostListResponse>> {
         const response = await treeholeApi.getTreeholes(page, signal);
         return response;
     }

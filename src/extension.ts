@@ -28,12 +28,66 @@ import { SupportTreeDataProvider } from './tree/supportTree';
 import { generateHtml } from './webview/generator';
 import * as baseApi from './api/base';
 import * as newsApi from './api/news';
+import { type CommentTreeItem, type CommentWebviewType, type LikeType } from './api/types';
 
-type LikeType = 'pos' | 'neg';
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+    return typeof value === 'object' && value !== null;
+};
 
-const vote = async (item: any, likeType: LikeType): Promise<void> => {
-    const comment = item?.command?.arguments?.[1] ?? item;
-    const commentId = comment?.comment_ID ?? comment?.id;
+const getCommandPayload = (item: unknown): unknown => {
+    if (!isRecord(item) || !isRecord(item.command)) {
+        return item;
+    }
+
+    const args = item.command.arguments;
+    return Array.isArray(args) ? (args[1] ?? item) : item;
+};
+
+const getCommentId = (item: unknown): number | string | undefined => {
+    const comment = getCommandPayload(item);
+    if (!isRecord(comment)) {
+        return undefined;
+    }
+
+    const id = comment.comment_ID ?? comment.id;
+    return typeof id === 'number' || typeof id === 'string' ? id : undefined;
+};
+
+const isNewsPost = (item: unknown): item is newsApi.NewsPost => {
+    return (
+        isRecord(item) &&
+        typeof item.url === 'string' &&
+        typeof item.content === 'string' &&
+        typeof item.contentLoaded === 'boolean'
+    );
+};
+
+const isCommentTreeItem = (item: unknown): item is CommentTreeItem => {
+    return (
+        isRecord(item) &&
+        typeof item.comment_ID === 'string' &&
+        typeof item.comment_author === 'string' &&
+        typeof item.comment_content === 'string' &&
+        Array.isArray(item.pics)
+    );
+};
+
+const commentWebviewTypes: readonly CommentWebviewType[] = [
+    'pic',
+    'ooxx',
+    'nvzhuang',
+    'treehole',
+    'qa',
+    'top',
+    'talk',
+];
+
+const isCommentWebviewType = (type: string): type is CommentWebviewType => {
+    return commentWebviewTypes.includes(type as CommentWebviewType);
+};
+
+const vote = async (item: unknown, likeType: LikeType): Promise<void> => {
+    const commentId = getCommentId(item);
 
     if (commentId === undefined || commentId === null) {
         vscode.window.showWarningMessage('无法获取评论 ID！');
@@ -82,7 +136,27 @@ export const activate = (context: vscode.ExtensionContext): void => {
     vscode.window.registerTreeDataProvider('support', supportDataProvider);
 
     let webviewOpened = false;
-    let webviewPanel: vscode.WebviewPanel;
+    let webviewPanel: vscode.WebviewPanel | undefined;
+
+    const getWebviewPanel = (): vscode.WebviewPanel => {
+        if (!webviewOpened || !webviewPanel) {
+            webviewPanel = vscode.window.createWebviewPanel(
+                'JanDan',
+                'JanDan',
+                vscode.ViewColumn.One,
+                {
+                    enableScripts: true,
+                },
+            );
+            webviewOpened = true;
+            webviewPanel.onDidDispose(() => {
+                webviewOpened = false;
+                webviewPanel = undefined;
+            });
+        }
+
+        return webviewPanel;
+    };
 
     context.subscriptions.push(
         vscode.commands.registerCommand('jandan.topRefresh', () => {
@@ -142,17 +216,27 @@ export const activate = (context: vscode.ExtensionContext): void => {
         vscode.commands.registerCommand('jandan.qaRefresh', () => {
             qaDataProvider.refresh();
         }),
-        vscode.commands.registerCommand('jandan.oo', async (item: any) => {
+        vscode.commands.registerCommand('jandan.oo', async (item: unknown) => {
             await vote(item, 'pos');
         }),
-        vscode.commands.registerCommand('jandan.xx', async (item: any) => {
+        vscode.commands.registerCommand('jandan.xx', async (item: unknown) => {
             await vote(item, 'neg');
         }),
-        vscode.commands.registerCommand('jandan.select', async (type: string, item: any) => {
+        vscode.commands.registerCommand('jandan.select', async (type: string, item: unknown) => {
             if (type === 'support') {
-                vscode.env.openExternal(vscode.Uri.parse(item));
-            } else {
-                if (type === 'news' && item.url && !item.contentLoaded) {
+                if (typeof item === 'string') {
+                    vscode.env.openExternal(vscode.Uri.parse(item));
+                }
+                return;
+            }
+
+            if (type === 'news') {
+                if (!isNewsPost(item)) {
+                    vscode.window.showWarningMessage('数据格式异常');
+                    return;
+                }
+
+                if (item.url && !item.contentLoaded) {
                     try {
                         const response = await newsApi.getNewsContent(item.url);
                         item.content = response.data || item.content;
@@ -162,26 +246,26 @@ export const activate = (context: vscode.ExtensionContext): void => {
                     }
                 }
 
-                if (!webviewOpened) {
-                    webviewPanel = vscode.window.createWebviewPanel(
-                        'JanDan',
-                        'JanDan',
-                        vscode.ViewColumn.One,
-                        {
-                            enableScripts: true,
-                        },
-                    );
-                    webviewOpened = true;
-                    webviewPanel.onDidDispose(() => {
-                        webviewOpened = false;
-                    });
-                }
                 const html: string = generateHtml(context, type, item);
-                webviewPanel.webview.html = html;
-                webviewPanel.webview.postMessage({
+                const panel = getWebviewPanel();
+                panel.webview.html = html;
+                panel.webview.postMessage({
                     type: 'init',
                 });
+                return;
             }
+
+            if (!isCommentWebviewType(type) || !isCommentTreeItem(item)) {
+                vscode.window.showWarningMessage('数据格式异常');
+                return;
+            }
+
+            const html: string = generateHtml(context, type, item);
+            const panel = getWebviewPanel();
+            panel.webview.html = html;
+            panel.webview.postMessage({
+                type: 'init',
+            });
         }),
     );
 };

@@ -16,95 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as vscode from 'vscode';
-import { AbstractTreeDataProvider, Node } from './abstractTree';
+import { type RequestResponse } from '../request';
+import { type CommentPostListResponse } from '../api/types';
+import { CommentPostTreeDataProvider } from './commentPostTree';
 import * as nvzhuangApi from '../api/nvzhuang';
 
-const imageSrcRegexp = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
+export class NvzhuangTreeDataProvider extends CommentPostTreeDataProvider {
+    protected readonly viewType = 'nvzhuang';
 
-const getImageUrls = (content: string): string[] => {
-    const urls: string[] = [];
-    let match: RegExpExecArray | null;
-
-    imageSrcRegexp.lastIndex = 0;
-    while ((match = imageSrcRegexp.exec(content)) !== null) {
-        urls.push(match[1]);
-    }
-
-    return urls;
-};
-
-export class NvzhuangTreeDataProvider extends AbstractTreeDataProvider {
-    private totalPages: number = 0;
-
-    public constructor() {
-        super();
-        this.currentPage = 0;
-    }
-
-    public prevPage(): void {
-        if (this.currentPage > 0 && this.currentPage < this.totalPages) {
-            this.currentPage++;
-            this.fireChange();
-        } else {
-            vscode.window.showWarningMessage('This is the first page!');
-        }
-    }
-
-    public nextPage(): void {
-        if (this.currentPage === 0) {
-            this.fireChange();
-        } else if (this.currentPage > 1) {
-            this.currentPage--;
-            this.fireChange();
-        } else {
-            vscode.window.showWarningMessage('This is the last page!');
-        }
-    }
-
-    public refresh(): void {
-        this.currentPage = 0;
-        this.clearCache();
-        this.fireChange();
-    }
-
-    protected async getItems(signal: AbortSignal): Promise<Node[]> {
-        const response: any = await nvzhuangApi.getNvzhuangs(this.currentPage, signal);
-        if (signal.aborted) {
-            return this.items;
-        }
-
-        const data = response.data.data;
-        const items: Array<Node> = [];
-        if (!data || !Array.isArray(data.list)) {
-            throw new Error('数据格式异常');
-        }
-
-        this.totalPages = data.total_pages;
-        this.currentPage = data.current_page;
-
-        data.list.forEach((element: any) => {
-            const content = element.content || '';
-            const nvzhuangItem = {
-                ...element,
-                comment_ID: String(element.id),
-                comment_author: element.author,
-                comment_content: content,
-                pics: getImageUrls(content),
-            };
-
-            const node = new Node(
-                nvzhuangItem.comment_author,
-                vscode.TreeItemCollapsibleState.None,
-                {
-                    command: 'jandan.select',
-                    title: '',
-                    arguments: ['nvzhuang', nvzhuangItem],
-                },
-            );
-            node.id = `nvzhuang-${nvzhuangItem.comment_ID}`;
-            items.push(node);
-        });
-        return items;
+    protected async getCommentPosts(
+        page: number,
+        signal: AbortSignal,
+    ): Promise<RequestResponse<CommentPostListResponse>> {
+        const response = await nvzhuangApi.getNvzhuangs(page, signal);
+        return response;
     }
 }

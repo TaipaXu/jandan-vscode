@@ -29,7 +29,7 @@ export interface RequestConfig {
     signal?: AbortSignal;
 }
 
-export interface RequestResponse<T = any> {
+export interface RequestResponse<T = unknown> {
     data: T;
     status: number;
     statusText: string;
@@ -37,7 +37,7 @@ export interface RequestResponse<T = any> {
     config: RequestConfig;
 }
 
-export class RequestError<T = any> extends Error {
+export class RequestError<T = unknown> extends Error {
     public constructor(
         message: string,
         public readonly response: RequestResponse<T>,
@@ -98,7 +98,7 @@ const buildBody = (data: unknown, headers: Headers): BodyInit | undefined => {
     return JSON.stringify(data);
 };
 
-const parseData = async (response: Response, responseType?: ResponseType): Promise<any> => {
+const parseData = async (response: Response, responseType?: ResponseType): Promise<unknown> => {
     if (responseType === 'arrayBuffer') {
         return response.arrayBuffer();
     }
@@ -127,7 +127,7 @@ const headersToObject = (headers: Headers): Record<string, string> => {
     return result;
 };
 
-const request = async <T = any>(config: RequestConfig): Promise<RequestResponse<T>> => {
+const request = async <T = unknown>(config: RequestConfig): Promise<RequestResponse<T>> => {
     const method = config.method ?? 'GET';
     const headers = buildHeaders(config.headers);
     const controller = new AbortController();
@@ -152,7 +152,7 @@ const request = async <T = any>(config: RequestConfig): Promise<RequestResponse<
         const data = await parseData(response, config.responseType);
 
         const requestResponse: RequestResponse<T> = {
-            data,
+            data: data as T,
             status: response.status,
             statusText: response.statusText,
             headers: headersToObject(response.headers),

@@ -17,12 +17,13 @@
  */
 
 import request, { type RequestResponse } from '../request';
+import { type CommentPostListResponse } from './types';
 
 export const getQas = async (
     page: number = 0,
     signal?: AbortSignal,
-): Promise<RequestResponse<any>> => {
-    const response = await request({
+): Promise<RequestResponse<CommentPostListResponse>> => {
+    const response = await request<CommentPostListResponse>({
         url: '/api/comment/post/88399',
         method: 'GET',
         signal,

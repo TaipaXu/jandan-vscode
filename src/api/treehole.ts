@@ -17,12 +17,13 @@
  */
 
 import request, { type RequestResponse } from '../request';
+import { type CommentPostListResponse } from './types';
 
 export const getTreeholes = async (
     page: number = 0,
     signal?: AbortSignal,
-): Promise<RequestResponse<any>> => {
-    const response = await request({
+): Promise<RequestResponse<CommentPostListResponse>> => {
+    const response = await request<CommentPostListResponse>({
         url: '/api/comment/post/102312',
         method: 'GET',
         signal,

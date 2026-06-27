@@ -17,6 +17,7 @@
  */
 
 import request, { type RequestResponse } from '../request';
+import { type TopItemsResponse } from './types';
 
 export interface TopCategory {
     id: string;
@@ -65,8 +66,8 @@ export const topCategories: TopCategory[] = [
 export const getTopItems = async (
     category: TopCategory,
     signal?: AbortSignal,
-): Promise<RequestResponse<any>> => {
-    const response = await request({
+): Promise<RequestResponse<TopItemsResponse>> => {
+    const response = await request<TopItemsResponse>({
         url: category.path,
         method: 'GET',
         signal,
