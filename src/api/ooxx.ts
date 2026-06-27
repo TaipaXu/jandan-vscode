@@ -19,13 +19,16 @@
 import { AxiosPromise } from 'axios';
 import request from '../request';
 
-export function getOoxxs(query: number): AxiosPromise<any> {
+export function getOoxxs(page: number = 0): AxiosPromise<any> {
     return request({
-        url: '',
+        url: '/api/comment/post/21183',
         method: 'GET',
+        headers: {
+            Referer: 'https://jandan.net/ooxx',
+        },
         params: {
-            oxwlxojflwblxbsapi: 'jandan.get_ooxx_comments',
-            page: query,
+            order: 'desc',
+            page: page,
         },
     });
 }

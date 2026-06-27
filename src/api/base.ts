@@ -17,33 +17,34 @@
  */
 
 import { AxiosPromise } from 'axios';
-import FormData from 'form-data';
 import request from '../request';
 
 export function support(id: string): AxiosPromise<any> {
-    const form = new FormData();
-    form.append('comment_id', id);
-    form.append('like_type', 'pos');
-    form.append('data_type', 'comment');
-
     return request({
         url: '/api/comment/vote',
         method: 'POST',
-        headers: form.getHeaders(),
-        data: form,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: {
+            comment_id: id,
+            like_type: 'pos',
+            data_type: 'comment',
+        },
     });
 }
 
 export function oppose(id: string): AxiosPromise<any> {
-    const form = new FormData();
-    form.append('comment_id', id);
-    form.append('like_type', 'neg');
-    form.append('data_type', 'comment');
-
     return request({
         url: '/api/comment/vote',
         method: 'POST',
-        headers: form.getHeaders(),
-        data: form,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: {
+            comment_id: id,
+            like_type: 'neg',
+            data_type: 'comment',
+        },
     });
 }

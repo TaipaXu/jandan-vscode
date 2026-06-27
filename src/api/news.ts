@@ -19,16 +19,137 @@
 import { AxiosPromise } from 'axios';
 import request from '../request';
 
-export function getNews(page: number): AxiosPromise<any> {
-    console.log('getNews', page);
+export interface NewsPost {
+    id: number;
+    url: string;
+    title: string;
+    excerpt: string;
+    content: string;
+    contentLoaded: boolean;
+    comment_count: number;
+    thumbnail?: string;
+}
+
+function decodeHtml(value: string): string {
+    return value
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'");
+}
+
+function stripHtml(value: string): string {
+    return decodeHtml(
+        value
+            .replace(/<[^>]+>/g, '')
+            .replace(/\s+/g, ' ')
+            .trim(),
+    );
+}
+
+function toAbsoluteUrl(url: string): string {
+    if (/^https?:\/\//i.test(url)) {
+        return url;
+    }
+
+    if (url.startsWith('//')) {
+        return `https:${url}`;
+    }
+
+    return `https://jandan.net${url.startsWith('/') ? url : `/${url}`}`;
+}
+
+function getPostId(url: string): number {
+    const match = url.match(/\/p\/(\d+)\/?/);
+    return match ? Number(match[1]) : 0;
+}
+
+function getNewsFallbackContent(title: string, excerpt: string, url: string): string {
+    return `
+        <h1>${title}</h1>
+        <p>${excerpt}</p>
+        <p><a href="${url}">${url}</a></p>
+    `;
+}
+
+export function parseNewsList(html: string): NewsPost[] {
+    const posts: NewsPost[] = [];
+    const itemMarker = '<div class="post-item row">';
+    let start = html.indexOf(itemMarker);
+
+    while (start !== -1) {
+        const nextItem = html.indexOf(itemMarker, start + itemMarker.length);
+        const nextDateRow = html.indexOf('<div class="row date-row">', start + itemMarker.length);
+        const mainEnd = html.indexOf('</main>', start + itemMarker.length);
+        const end = [nextItem, nextDateRow, mainEnd]
+            .filter((index) => index > start)
+            .sort((a, b) => a - b)[0];
+        const fragment = html.slice(start, end === undefined ? html.length : end);
+        const titleMatch = fragment.match(
+            /<h2 class="post-title">\s*<a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>\s*<\/h2>/,
+        );
+
+        if (titleMatch) {
+            const url = toAbsoluteUrl(titleMatch[1]);
+            const title = stripHtml(titleMatch[2]);
+            const excerptMatch = fragment.match(/<div class="post-excerpt">([\s\S]*?)<\/div>/);
+            const commentCountMatch = fragment.match(
+                /<div class="post-comment-count[^"]*">([\s\S]*?)<\/div>/,
+            );
+            const thumbnailMatch = fragment.match(
+                /<div class="post-thumb[\s\S]*?<img[^>]+src="([^"]+)"/,
+            );
+            const excerpt = excerptMatch ? stripHtml(excerptMatch[1]) : '';
+
+            posts.push({
+                id: getPostId(url),
+                url,
+                title,
+                excerpt,
+                content: getNewsFallbackContent(title, excerpt, url),
+                contentLoaded: false,
+                comment_count: commentCountMatch ? Number(stripHtml(commentCountMatch[1])) : 0,
+                thumbnail: thumbnailMatch ? toAbsoluteUrl(thumbnailMatch[1]) : undefined,
+            });
+        }
+
+        start = nextItem;
+    }
+
+    return posts;
+}
+
+export function parseNewsContent(html: string): string {
+    const contentMatch = html.match(/<div class="post-content">\s*([\s\S]*?)\s*<\/div>\s*<script>/);
+    return contentMatch ? contentMatch[1].replace(/src="\/\//g, 'src="https://') : '';
+}
+
+export function getNews(page: number = 1): AxiosPromise<any> {
+    const url = page <= 1 ? '/' : `/page/${page}`;
 
     return request({
-        url: '',
+        url,
         method: 'GET',
-        params: {
-            oxwlxojflwblxbsapi: 'get_recent_posts',
-            include: 'url,date,tags,author,title,content,comment_count,custom_fields',
-            page: page,
-        },
+        responseType: 'text',
+        transformResponse: (data) => data,
+    }).then((response) => {
+        response.data = {
+            posts: parseNewsList(response.data),
+        };
+        return response;
+    });
+}
+
+export function getNewsContent(url: string): AxiosPromise<any> {
+    return request({
+        url,
+        method: 'GET',
+        responseType: 'text',
+        transformResponse: (data) => data,
+    }).then((response) => {
+        response.data = parseNewsContent(response.data);
+        return response;
     });
 }

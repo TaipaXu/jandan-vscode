@@ -19,8 +19,13 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
 
 const config: AxiosRequestConfig = {
-    baseURL: 'https://i.jandan.net',
+    baseURL: 'https://jandan.net',
     timeout: 10000,
+    headers: {
+        Accept: 'application/json, text/html, */*',
+        Referer: 'https://jandan.net/',
+        'User-Agent': 'Mozilla/5.0',
+    },
 };
 
 const service: AxiosInstance = axios.create(config);

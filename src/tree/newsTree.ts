@@ -24,7 +24,12 @@ export class NewsTreeDataProvider extends AbstractTreeDataProvider {
     protected async getItems(): Promise<Array<Node>> {
         const response: any = await newsApi.getNews(this.currentPage);
         const items: Array<Node> = [];
-        response.data.posts.forEach((element: any) => {
+        const posts = response.data.posts;
+        if (!Array.isArray(posts)) {
+            return items;
+        }
+
+        posts.forEach((element: any) => {
             items.push(
                 new Node(element.title, vscode.TreeItemCollapsibleState.None, {
                     command: 'jandan.select',

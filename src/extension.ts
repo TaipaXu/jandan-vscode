@@ -23,6 +23,7 @@ import { OoxxTreeDataProvider } from './tree/ooxxTree';
 import { SupportTreeDataProvider } from './tree/supportTree';
 import { generateHtml } from './webview/generator';
 import * as baseApi from './api/base';
+import * as newsApi from './api/news';
 
 export function activate(context: vscode.ExtensionContext): void {
     const newsDataProvider: NewsTreeDataProvider = new NewsTreeDataProvider();
@@ -70,7 +71,7 @@ export function activate(context: vscode.ExtensionContext): void {
             try {
                 const response = await baseApi.support(item.command.arguments[1].comment_ID);
                 if (response.status === 200) {
-                    const result: 0 | 1 = response.data.error;
+                    const result: 0 | 1 = response.data.error ?? response.data.code;
                     if (result === 0) {
                         vscode.window.showInformationMessage('投票成功！');
                     } else if (result === 1) {
@@ -85,7 +86,7 @@ export function activate(context: vscode.ExtensionContext): void {
             try {
                 const response = await baseApi.oppose(item.command.arguments[1].comment_ID);
                 if (response.status === 200) {
-                    const result: 0 | 1 = response.data.error;
+                    const result: 0 | 1 = response.data.error ?? response.data.code;
                     if (result === 0) {
                         vscode.window.showInformationMessage('投票成功！');
                     } else if (result === 1) {
@@ -96,10 +97,20 @@ export function activate(context: vscode.ExtensionContext): void {
                 vscode.window.showWarningMessage('网络错误！');
             }
         }),
-        vscode.commands.registerCommand('jandan.select', (type: string, item: any) => {
+        vscode.commands.registerCommand('jandan.select', async (type: string, item: any) => {
             if (type === 'support') {
                 vscode.env.openExternal(vscode.Uri.parse(item));
             } else {
+                if (type === 'news' && item.url && !item.contentLoaded) {
+                    try {
+                        const response = await newsApi.getNewsContent(item.url);
+                        item.content = response.data || item.content;
+                        item.contentLoaded = true;
+                    } catch {
+                        vscode.window.showWarningMessage('网络错误！');
+                    }
+                }
+
                 if (!webviewOpened) {
                     webviewPanel = vscode.window.createWebviewPanel(
                         'JanDan',

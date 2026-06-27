@@ -21,11 +21,10 @@ import request from '../request';
 
 export function getPics(page: number = 0): AxiosPromise<any> {
     return request({
-        url: 'https://jandan.net/api/comment/post/26402',
+        url: '/api/comment/post/26402',
         method: 'GET',
         headers: {
             Referer: 'https://jandan.net/pic',
-            'User-Agent': 'Mozilla/5.0',
         },
         params: {
             order: 'desc',

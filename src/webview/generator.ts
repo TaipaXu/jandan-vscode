@@ -26,8 +26,8 @@ export function generateHtml(context: vscode.ExtensionContext, type: string, dat
 
     if (type === 'news') {
         html = html.replace('${content}', data.content);
-        html = html.replace('src="//', 'src="https://');
-    } else if (type === 'pic') {
+        html = html.replace(/src="\/\//g, 'src="https://');
+    } else if (type === 'pic' || type === 'ooxx') {
         html = html.replace('${content}', data.comment_content || data.content || '');
     } else if (type === 'talk') {
         html = html.replace('${content}', data.comment_content);
