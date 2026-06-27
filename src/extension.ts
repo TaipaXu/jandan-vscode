@@ -29,6 +29,39 @@ import { generateHtml } from './webview/generator';
 import * as baseApi from './api/base';
 import * as newsApi from './api/news';
 
+type LikeType = 'pos' | 'neg';
+
+async function vote(item: any, likeType: LikeType): Promise<void> {
+    const comment = item?.command?.arguments?.[1] ?? item;
+    const commentId = comment?.comment_ID ?? comment?.id;
+
+    if (commentId === undefined || commentId === null) {
+        vscode.window.showWarningMessage('无法获取评论 ID！');
+        return;
+    }
+
+    try {
+        const response =
+            likeType === 'pos' ? await baseApi.support(commentId) : await baseApi.oppose(commentId);
+
+        if (response.status === 200) {
+            const result = response.data?.error ?? response.data?.code;
+            const message = response.data?.msg;
+            if (result === 0) {
+                vscode.window.showInformationMessage('投票成功！');
+            } else if (message) {
+                vscode.window.showWarningMessage(message);
+            } else if (result === 1) {
+                vscode.window.showWarningMessage('您已经投过票了');
+            } else {
+                vscode.window.showWarningMessage('投票失败！');
+            }
+        }
+    } catch {
+        vscode.window.showWarningMessage('网络错误！');
+    }
+}
+
 export function activate(context: vscode.ExtensionContext): void {
     const topDataProvider: TopTreeDataProvider = new TopTreeDataProvider();
     const newsDataProvider: NewsTreeDataProvider = new NewsTreeDataProvider();
@@ -110,34 +143,10 @@ export function activate(context: vscode.ExtensionContext): void {
             qaDataProvider.refresh();
         }),
         vscode.commands.registerCommand('jandan.oo', async (item: any) => {
-            try {
-                const response = await baseApi.support(item.command.arguments[1].comment_ID);
-                if (response.status === 200) {
-                    const result: 0 | 1 = response.data.error ?? response.data.code;
-                    if (result === 0) {
-                        vscode.window.showInformationMessage('投票成功！');
-                    } else if (result === 1) {
-                        vscode.window.showWarningMessage('您已投票！');
-                    }
-                }
-            } catch {
-                vscode.window.showWarningMessage('网络错误！');
-            }
+            await vote(item, 'pos');
         }),
         vscode.commands.registerCommand('jandan.xx', async (item: any) => {
-            try {
-                const response = await baseApi.oppose(item.command.arguments[1].comment_ID);
-                if (response.status === 200) {
-                    const result: 0 | 1 = response.data.error ?? response.data.code;
-                    if (result === 0) {
-                        vscode.window.showInformationMessage('投票成功！');
-                    } else if (result === 1) {
-                        vscode.window.showWarningMessage('您已投票！');
-                    }
-                }
-            } catch {
-                vscode.window.showWarningMessage('网络错误！');
-            }
+            await vote(item, 'neg');
         }),
         vscode.commands.registerCommand('jandan.select', async (type: string, item: any) => {
             if (type === 'support') {

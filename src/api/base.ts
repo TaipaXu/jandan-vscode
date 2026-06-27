@@ -19,7 +19,9 @@
 import { AxiosPromise } from 'axios';
 import request from '../request';
 
-export function support(id: string): AxiosPromise<any> {
+type LikeType = 'pos' | 'neg';
+
+function vote(id: number | string, likeType: LikeType): AxiosPromise<any> {
     return request({
         url: '/api/comment/vote',
         method: 'POST',
@@ -27,24 +29,17 @@ export function support(id: string): AxiosPromise<any> {
             'Content-Type': 'application/json',
         },
         data: {
-            comment_id: id,
-            like_type: 'pos',
+            comment_id: Number(id),
+            like_type: likeType,
             data_type: 'comment',
         },
     });
 }
 
-export function oppose(id: string): AxiosPromise<any> {
-    return request({
-        url: '/api/comment/vote',
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        data: {
-            comment_id: id,
-            like_type: 'neg',
-            data_type: 'comment',
-        },
-    });
+export function support(id: number | string): AxiosPromise<any> {
+    return vote(id, 'pos');
+}
+
+export function oppose(id: number | string): AxiosPromise<any> {
+    return vote(id, 'neg');
 }
