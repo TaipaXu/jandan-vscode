@@ -93,6 +93,21 @@
                 "icon": "$(refresh)"
             },
             {
+                "command": "jandan.nvzhuangPrevious",
+                "title": "上一页",
+                "icon": "$(arrow-up)"
+            },
+            {
+                "command": "jandan.nvzhuangNext",
+                "title": "下一页",
+                "icon": "$(arrow-down)"
+            },
+            {
+                "command": "jandan.nvzhuangRefresh",
+                "title": "刷新",
+                "icon": "$(refresh)"
+            },
+            {
                 "command": "jandan.oo",
                 "title": "oo"
             },
@@ -147,6 +162,21 @@
                     "command": "jandan.ooxxRefresh",
                     "when": "view == ooxx",
                     "group": "navigation@2"
+                },
+                {
+                    "command": "jandan.nvzhuangPrevious",
+                    "when": "view == nvzhuang",
+                    "group": "navigation@0"
+                },
+                {
+                    "command": "jandan.nvzhuangNext",
+                    "when": "view == nvzhuang",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "jandan.nvzhuangRefresh",
+                    "when": "view == nvzhuang",
+                    "group": "navigation@2"
                 }
             ],
             "view/item/context": [
@@ -165,6 +195,14 @@
                 {
                     "command": "jandan.xx",
                     "when": "view == ooxx"
+                },
+                {
+                    "command": "jandan.oo",
+                    "when": "view == nvzhuang"
+                },
+                {
+                    "command": "jandan.xx",
+                    "when": "view == nvzhuang"
                 }
             ],
             "commandPalette": [
@@ -205,6 +243,18 @@
                     "when": "never"
                 },
                 {
+                    "command": "jandan.nvzhuangPrevious",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.nvzhuangNext",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.nvzhuangRefresh",
+                    "when": "never"
+                },
+                {
                     "command": "jandan.oo",
                     "when": "never"
                 },
@@ -236,6 +286,10 @@
                 {
                     "id": "ooxx",
                     "name": "随手拍"
+                },
+                {
+                    "id": "nvzhuang",
+                    "name": "女装"
                 },
                 {
                     "id": "support",
