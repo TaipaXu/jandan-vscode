@@ -145,6 +145,11 @@
             {
                 "command": "jandan.xx",
                 "title": "xx"
+            },
+            {
+                "command": "jandan.comment",
+                "title": "吐槽",
+                "icon": "$(comment-discussion)"
             }
         ],
         "menus": {
@@ -255,12 +260,22 @@
                     "when": "view == top && viewItem == voteable"
                 },
                 {
+                    "command": "jandan.comment",
+                    "when": "view == top && viewItem == voteable",
+                    "group": "navigation@2"
+                },
+                {
                     "command": "jandan.oo",
                     "when": "view == pic"
                 },
                 {
                     "command": "jandan.xx",
                     "when": "view == pic"
+                },
+                {
+                    "command": "jandan.comment",
+                    "when": "view == pic && viewItem == voteable",
+                    "group": "navigation@2"
                 },
                 {
                     "command": "jandan.oo",
@@ -271,12 +286,22 @@
                     "when": "view == ooxx"
                 },
                 {
+                    "command": "jandan.comment",
+                    "when": "view == ooxx && viewItem == voteable",
+                    "group": "navigation@2"
+                },
+                {
                     "command": "jandan.oo",
                     "when": "view == nvzhuang"
                 },
                 {
                     "command": "jandan.xx",
                     "when": "view == nvzhuang"
+                },
+                {
+                    "command": "jandan.comment",
+                    "when": "view == nvzhuang && viewItem == voteable",
+                    "group": "navigation@2"
                 },
                 {
                     "command": "jandan.oo",
@@ -287,12 +312,22 @@
                     "when": "view == treehole"
                 },
                 {
+                    "command": "jandan.comment",
+                    "when": "view == treehole && viewItem == voteable",
+                    "group": "navigation@2"
+                },
+                {
                     "command": "jandan.oo",
                     "when": "view == qa"
                 },
                 {
                     "command": "jandan.xx",
                     "when": "view == qa"
+                },
+                {
+                    "command": "jandan.comment",
+                    "when": "view == qa && viewItem == voteable",
+                    "group": "navigation@2"
                 }
             ],
             "commandPalette": [
@@ -378,6 +413,10 @@
                 },
                 {
                     "command": "jandan.xx",
+                    "when": "never"
+                },
+                {
+                    "command": "jandan.comment",
                     "when": "never"
                 }
             ]

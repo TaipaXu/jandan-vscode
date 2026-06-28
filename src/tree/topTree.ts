@@ -49,7 +49,7 @@ class TopItemNode extends Node {
             `作者: ${item.comment_author}`,
             `oo: ${positive}`,
             `xx: ${negative}`,
-            item.sub_comment_count ? `回复: ${item.sub_comment_count}` : '',
+            item.sub_comment_count ? `评论: ${item.sub_comment_count}` : '',
             item.ip_location ? `IP: ${item.ip_location}` : '',
         ]
             .filter(Boolean)

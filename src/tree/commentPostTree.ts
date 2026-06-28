@@ -79,6 +79,8 @@ export abstract class CommentPostTreeDataProvider extends AbstractTreeDataProvid
 
         data.list.forEach((element) => {
             const item = normalizeCommentItem(element);
+            const positive = item.vote_positive ?? 0;
+            const negative = item.vote_negative ?? 0;
 
             const node = new Node(item.comment_author, vscode.TreeItemCollapsibleState.None, {
                 command: 'jandan.select',
@@ -86,6 +88,18 @@ export abstract class CommentPostTreeDataProvider extends AbstractTreeDataProvid
                 arguments: [this.viewType, item],
             });
             node.id = `${this.viewType}-${item.comment_ID}`;
+            node.contextValue = 'voteable';
+            node.description = `${positive} oo / ${negative} xx`;
+            node.tooltip = [
+                item.post_title,
+                `作者: ${item.comment_author}`,
+                `oo: ${positive}`,
+                `xx: ${negative}`,
+                item.sub_comment_count ? `评论: ${item.sub_comment_count}` : '',
+                item.ip_location ? `IP: ${item.ip_location}` : '',
+            ]
+                .filter(Boolean)
+                .join('\n');
             items.push(node);
         });
         return items;

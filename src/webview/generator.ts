@@ -21,6 +21,8 @@ import fs from 'fs';
 import * as vscode from 'vscode';
 import { type NewsPost } from '../api/news';
 import {
+    type CommentListItem,
+    type CommentListResponse,
     type CommentTreeItem,
     type CommentWebviewType,
     type JandanWebviewType,
@@ -40,6 +42,78 @@ const getCommentContent = (data: WebviewData): string => {
     return data.comment_content || data.content || '';
 };
 
+const getWebviewHtml = (context: vscode.ExtensionContext, content: string): string => {
+    const resourcePath = path.join(context.extensionPath, 'static/web/index.html');
+    return fs.readFileSync(resourcePath, 'utf-8').replace('${content}', content);
+};
+
+const getCommentWebviewHtml = (context: vscode.ExtensionContext, content: string): string => {
+    const resourcePath = path.join(context.extensionPath, 'static/web/comment.html');
+    return fs.readFileSync(resourcePath, 'utf-8').replace('${content}', content);
+};
+
+const escapeHtml = (value: string | number | boolean | null | undefined): string => {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+};
+
+const getCommentListItems = (items: CommentListItem[] | undefined): CommentListItem[] => {
+    return Array.isArray(items) ? items : [];
+};
+
+const renderCommentItem = (item: CommentListItem): string => {
+    const positive = item.vote_positive ?? 0;
+    const negative = item.vote_negative ?? 0;
+    const location = item.ip_location ? `<span>IP: ${escapeHtml(item.ip_location)}</span>` : '';
+    const date = item.comment_date ? `<span>${escapeHtml(item.comment_date)}</span>` : '';
+
+    return `
+        <article class="comment-item">
+            <div class="comment-item__meta">
+                <strong class="comment-item__author">${escapeHtml(item.comment_author)}</strong>
+                ${date}
+                ${location}
+            </div>
+            <div class="comment-item__content">${item.comment_content || ''}</div>
+            <div class="comment-item__stats">${positive} oo / ${negative} xx</div>
+        </article>
+    `;
+};
+
+const renderCommentSection = (title: string, items: CommentListItem[]): string => {
+    if (items.length === 0) {
+        return '';
+    }
+
+    return `
+        <section class="comment-section">
+            <h2 class="comment-section__title">${escapeHtml(title)}</h2>
+            <div class="comment-list">
+                ${items.map(renderCommentItem).join('')}
+            </div>
+        </section>
+    `;
+};
+
+const renderCommentListContent = (response: CommentListResponse): string => {
+    const hotComments = getCommentListItems(response.hotComments);
+    const comments = getCommentListItems(response.comments);
+
+    if (hotComments.length === 0 && comments.length === 0) {
+        return '<p class="comment-message">暂无评论</p>';
+    }
+
+    return `
+        ${renderCommentSection('热门评论', hotComments)}
+        ${renderCommentSection('全部评论', comments)}
+        ${response.hasNextPage ? '<p class="comment-message">还有更多评论</p>' : ''}
+    `;
+};
+
 export function generateHtml(
     context: vscode.ExtensionContext,
     type: 'news',
@@ -55,15 +129,29 @@ export function generateHtml(
     type: JandanWebviewType,
     data: WebviewData,
 ): string {
-    const resourcePath = path.join(context.extensionPath, 'static/web/index.html');
-    let html = fs.readFileSync(resourcePath, 'utf-8');
-
+    let html: string;
     if (type === 'news' && isNewsPost(data)) {
-        html = html.replace('${content}', data.content);
+        html = getWebviewHtml(context, data.content);
         html = html.replace(/src="\/\//g, 'src="https://');
     } else {
-        html = html.replace('${content}', getCommentContent(data));
+        html = getWebviewHtml(context, getCommentContent(data));
     }
 
     return html;
+}
+
+export function generateCommentHtml(
+    context: vscode.ExtensionContext,
+    response?: CommentListResponse,
+    error?: string,
+): string {
+    const body = error
+        ? `<p class="comment-message">${escapeHtml(error)}</p>`
+        : response
+          ? renderCommentListContent(response)
+          : '<p class="comment-message">加载评论中...</p>';
+
+    const html = getCommentWebviewHtml(context, body);
+
+    return html.replace(/src="\/\//g, 'src="https://');
 }

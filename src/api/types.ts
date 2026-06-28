@@ -65,6 +65,40 @@ export interface CommentTreeItem extends CommentPostItem {
     pics: string[];
 }
 
+export interface CommentListItem {
+    comment_ID: number;
+    comment_post_ID: number;
+    comment_topic: string;
+    comment_author: string;
+    comment_date: string;
+    comment_date_int: number;
+    comment_content: string;
+    comment_parent: number;
+    comment_reply_ID: number;
+    is_jandan_user: number;
+    is_tip_user: number;
+    vote_positive: number;
+    vote_negative: number;
+    sub_comment_count: number;
+    post_title: string;
+    images: string[] | null;
+    ip_location: string;
+    avatar_ref: string;
+    avatar_type: number;
+    author_membership: number;
+    primary_badge_id: number;
+    [key: string]: unknown;
+}
+
+export interface CommentListResponse {
+    code?: number;
+    msg?: string;
+    hotComments: CommentListItem[];
+    comments: CommentListItem[];
+    hasNextPage: boolean;
+    [key: string]: unknown;
+}
+
 export interface VoteResponse {
     code?: number;
     error?: number;

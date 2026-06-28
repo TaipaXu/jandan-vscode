@@ -25,8 +25,9 @@ import { NvzhuangTreeDataProvider } from './tree/nvzhuangTree';
 import { TreeholeTreeDataProvider } from './tree/treeholeTree';
 import { QaTreeDataProvider } from './tree/qaTree';
 import { SupportTreeDataProvider } from './tree/supportTree';
-import { generateHtml } from './webview/generator';
+import { generateCommentHtml, generateHtml } from './webview/generator';
 import * as baseApi from './api/base';
+import * as commentApi from './api/comment';
 import * as newsApi from './api/news';
 import { type CommentTreeItem, type CommentWebviewType, type LikeType } from './api/types';
 
@@ -137,6 +138,9 @@ export const activate = (context: vscode.ExtensionContext): void => {
 
     let webviewOpened = false;
     let webviewPanel: vscode.WebviewPanel | undefined;
+    let commentWebviewOpened = false;
+    let commentWebviewPanel: vscode.WebviewPanel | undefined;
+    let commentRequestVersion = 0;
 
     const getWebviewPanel = (): vscode.WebviewPanel => {
         if (!webviewOpened || !webviewPanel) {
@@ -156,6 +160,77 @@ export const activate = (context: vscode.ExtensionContext): void => {
         }
 
         return webviewPanel;
+    };
+
+    const getCommentWebviewPanel = (): vscode.WebviewPanel => {
+        if (!commentWebviewOpened || !commentWebviewPanel) {
+            commentWebviewPanel = vscode.window.createWebviewPanel(
+                'JanDanComments',
+                'JanDan Comments',
+                vscode.ViewColumn.One,
+                {
+                    enableScripts: true,
+                },
+            );
+            commentWebviewOpened = true;
+            commentWebviewPanel.onDidDispose(() => {
+                commentWebviewOpened = false;
+                commentWebviewPanel = undefined;
+            });
+        }
+
+        return commentWebviewPanel;
+    };
+
+    const revealPanel = (panel: vscode.WebviewPanel): void => {
+        panel.reveal(panel.viewColumn ?? vscode.ViewColumn.One);
+    };
+
+    const showComments = async (item: unknown): Promise<void> => {
+        const comment = getCommandPayload(item);
+        if (!isCommentTreeItem(comment)) {
+            vscode.window.showWarningMessage('数据格式异常');
+            return;
+        }
+
+        const panel = getCommentWebviewPanel();
+        const requestVersion = ++commentRequestVersion;
+        panel.title = `评论 - ${comment.comment_author}`;
+        panel.webview.html = generateCommentHtml(context);
+        revealPanel(panel);
+        panel.webview.postMessage({
+            type: 'init',
+        });
+
+        try {
+            const response = await commentApi.getComments(comment.comment_ID);
+            if (requestVersion !== commentRequestVersion) {
+                return;
+            }
+
+            if (response.data.code !== undefined && response.data.code !== 0) {
+                panel.webview.html = generateCommentHtml(
+                    context,
+                    undefined,
+                    response.data.msg || '评论加载失败',
+                );
+                revealPanel(panel);
+                return;
+            }
+
+            panel.webview.html = generateCommentHtml(context, response.data);
+            revealPanel(panel);
+            panel.webview.postMessage({
+                type: 'init',
+            });
+        } catch {
+            if (requestVersion !== commentRequestVersion) {
+                return;
+            }
+
+            panel.webview.html = generateCommentHtml(context, undefined, '网络错误！');
+            revealPanel(panel);
+        }
     };
 
     context.subscriptions.push(
@@ -222,6 +297,9 @@ export const activate = (context: vscode.ExtensionContext): void => {
         vscode.commands.registerCommand('jandan.xx', async (item: unknown) => {
             await vote(item, 'neg');
         }),
+        vscode.commands.registerCommand('jandan.comment', async (item: unknown) => {
+            await showComments(item);
+        }),
         vscode.commands.registerCommand('jandan.select', async (type: string, item: unknown) => {
             if (type === 'support') {
                 if (typeof item === 'string') {
@@ -249,6 +327,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
                 const html: string = generateHtml(context, type, item);
                 const panel = getWebviewPanel();
                 panel.webview.html = html;
+                revealPanel(panel);
                 panel.webview.postMessage({
                     type: 'init',
                 });
@@ -263,6 +342,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
             const html: string = generateHtml(context, type, item);
             const panel = getWebviewPanel();
             panel.webview.html = html;
+            revealPanel(panel);
             panel.webview.postMessage({
                 type: 'init',
             });
