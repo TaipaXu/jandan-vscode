@@ -21,12 +21,191 @@
         <title>JanDan</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                color: var(--vscode-foreground);
+                background: var(--vscode-editor-background);
+                font-family: var(--vscode-font-family);
+                font-size: var(--vscode-font-size);
+                font-weight: var(--vscode-font-weight);
+                line-height: 1.72;
+                margin: 0;
+            }
+
+            main {
+                max-width: 880px;
+                margin: 0 auto;
+                padding: 18px 16px 36px;
+                overflow-wrap: anywhere;
+            }
+
+            main > :first-child {
+                margin-top: 0;
+            }
+
+            main > :last-child {
+                margin-bottom: 0;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                color: var(--vscode-foreground);
+                font-weight: 600;
+                line-height: 1.35;
+                margin: 1.25em 0 0.55em;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            h3 {
+                font-size: 17px;
+            }
+
+            p,
+            ul,
+            ol,
+            blockquote,
+            pre,
+            table,
+            figure {
+                margin: 0 0 16px;
+            }
+
+            ul,
+            ol {
+                padding-left: 1.6em;
+            }
+
+            li + li {
+                margin-top: 4px;
+            }
+
+            a {
+                color: var(--vscode-textLink-foreground);
+                text-decoration: none;
+                text-underline-offset: 3px;
+            }
+
+            a:hover {
+                color: var(--vscode-textLink-activeForeground);
+                text-decoration: underline;
+            }
+
+            blockquote {
+                color: var(--vscode-descriptionForeground);
+                background: var(--vscode-editorWidget-background);
+                border-left: 3px solid var(--vscode-textLink-foreground);
+                border-radius: 0 6px 6px 0;
+                padding: 10px 14px;
+            }
+
+            code {
+                background: var(--vscode-textCodeBlock-background);
+                border: 1px solid var(--vscode-panel-border);
+                border-radius: 4px;
+                font-family: var(--vscode-editor-font-family);
+                font-size: 0.92em;
+                padding: 1px 4px;
+            }
+
+            pre {
+                background: var(--vscode-textCodeBlock-background);
+                border: 1px solid var(--vscode-panel-border);
+                border-radius: 6px;
+                overflow: auto;
+                padding: 12px 14px;
+            }
+
+            pre code {
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+                display: block;
+                padding: 0;
+            }
+
             img {
                 display: block;
+                max-width: 100%;
+                height: auto;
+                border-radius: 6px;
             }
 
             .pic__img {
-                margin-bottom: 12px;
+                margin: 10px 0 16px;
+            }
+
+            p > img,
+            figure img {
+                margin: 0 auto;
+            }
+
+            figure {
+                color: var(--vscode-descriptionForeground);
+                font-size: 12px;
+                text-align: center;
+            }
+
+            figcaption {
+                margin-top: 8px;
+            }
+
+            table {
+                border-collapse: collapse;
+                display: block;
+                overflow-x: auto;
+                width: 100%;
+            }
+
+            th,
+            td {
+                border: 1px solid var(--vscode-panel-border);
+                padding: 7px 10px;
+                text-align: left;
+                vertical-align: top;
+            }
+
+            th {
+                background: var(--vscode-editorWidget-background);
+                font-weight: 600;
+            }
+
+            hr {
+                border: 0;
+                border-top: 1px solid var(--vscode-panel-border);
+                margin: 24px 0;
+            }
+
+            iframe,
+            video {
+                display: block;
+                max-width: 100%;
+                margin: 0 auto 16px;
+                border: 0;
+                border-radius: 6px;
+            }
+
+            @media (max-width: 520px) {
+                main {
+                    padding: 12px 10px 28px;
+                }
+
+                h1 {
+                    font-size: 21px;
+                }
             }
         </style>
     </head>
